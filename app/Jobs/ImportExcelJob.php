@@ -39,6 +39,8 @@ class ImportExcelJob implements ShouldQueue
         $importLog = ExcelImportLog::find($this->importLogId);
         set_time_limit(600);
         try {
+            $importLog->status = 'Prosses';
+            $importLog->save();
             // Lakukan impor data dari file Excel
             Excel::import(new StudentsImport($importLog->id, $this->periode, $this->skema),  $importLog->file_path);
 

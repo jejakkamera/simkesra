@@ -39,7 +39,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     public function model(array $row)
     {
         DB::beginTransaction();
-        // dd($row);
+        
         try {
             if (!empty($row['nik']) && !is_null($row['nama_lengkap']) && !is_null($row['nama_ibu_kandung']) &&  !is_null($row['kecamatan'])) {
                
@@ -53,7 +53,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                     $profilestatus = 'exists';
                     $id = (string) Str::uuid();
                     $profile = Profile::where('nik', $row['nik'])->first();
-
+                    
                     if ($profile) {
                         $id = $profile->id; // Ambil ID yang sudah ada
                     } else {
@@ -76,21 +76,25 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                         ]);
                         $profilestatus = 'add';
                     }
+                    
                    
                     $statuspemenangan='Exist';
                     $Pemenangan = Pemenangan::with('skema')->where('profile_id', $id)->where('periode',$this->periode)->first();
+                    
                     if(!$Pemenangan){
+                        
                         $pemenang=Pemenangan::create([
                             'id' => (string) Str::uuid(),
                             'profile_id' => $id,
                             'idbantuan' => $this->skema,
                             'periode' => $this->periode,
                             'no_rekening' => $row['no_rekening'],
-                            'jenis_rekening' => $row['jenis_rekening'],
-                            'tipe_rekening' => $row['tipe_rekening'],
+                            // 'jenis_rekening' => $row['jenis_rekening'],
+                            // 'tipe_rekening' => $row['tipe_rekening'],
                         ]);
                         $statuspemenangan='Add';
                     }
+                    
                     
 
                     if($statuspemenangan=='Add'){
@@ -109,6 +113,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                         'note' => $note ,
                     ]);
                     DB::commit();
+                    
                     return $profile;
                 } else {    
                     ExcelImportLogDetail::create([
@@ -131,6 +136,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                 //     return null;
                 // }
             } else {
+                DB::rollBack();
                 // Buat log dengan status failed jika data tidak lengkap
                 ExcelImportLogDetail::create([
                     'import_log_id' => $this->importLog,

@@ -239,7 +239,7 @@
             // Menampilkan konfirmasi SweetAlert untuk melanjutkan pengiriman form
             Swal.fire({
                 title: 'Apakah Anda Yakin?',
-                html: "Data yang Anda masukkan akan disimpan.<br> Sebesar Rp. {{ number_format($pemenangan->skema->nominal) }} kepada {{ old('nik', $pemenangan->nik) }}",
+                html: "Data yang Anda masukkan akan disimpan.<br> Sebesar Rp. {{ number_format($pemenangan->skema->nominal) }} kepada {{  $pemenangan->nama_lengkap }} - {{ $pemenangan->nik }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Simpan',
