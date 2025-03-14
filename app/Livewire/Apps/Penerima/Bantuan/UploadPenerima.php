@@ -77,11 +77,11 @@ class UploadPenerima extends Component
             'periode_id' => $this->periode, // Store the selected periode
             'skema_id' => $this->skema, // Store the selected skema
         ]);
-         Excel::import(new StudentsImport($importLog->id, $this->periode, $this->skema),  $importLog->file_path);
-        $importLog->update(['status' => 'completed']);
+        //  Excel::import(new StudentsImport($importLog->id, $this->periode, $this->skema),  $importLog->file_path);
+        // $importLog->update(['status' => 'completed']);
 
         // // Dispatch job untuk memproses file di background
-        // ImportExcelJob::dispatch($importLog->id, $this->periode, $this->skema); // Passing periode and skema to the job
+        ImportExcelJob::dispatch($importLog->id, $this->periode, $this->skema); // Passing periode and skema to the job
 
 
         // Kirim pesan sukses ke sesi
