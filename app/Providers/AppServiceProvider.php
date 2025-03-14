@@ -27,19 +27,19 @@ class AppServiceProvider extends ServiceProvider
   {
 
     // Ambil data School dan logo
-    // $school = School::find(1);
+    $school = School::find(1);
 
-    // // Simpan ke session
-    // session([
-    //   'school_logo' => $school?->logo ? asset('storage/' . $school->logo) : asset('assets/img/favicon/polijati.ico'),
-    //   'school_name' => $school?->name ?? 'Default School Name',
-    // ]);
+    // Simpan ke session
+    session([
+      'school_logo' => $school?->logo ? asset('storage/' . $school->logo) : asset('assets/img/favicon/polijati.ico'),
+      'school_name' => $school?->name ?? 'Default School Name',
+    ]);
 
-    // // Bagikan ke semua tampilan (Blade)
-    // view()->share([
-    //   'school_logo' => session('school_logo'),
-    //   'school_name' => session('school_name'),
-    // ]);
+    // Bagikan ke semua tampilan (Blade)
+    view()->share([
+      'school_logo' => session('school_logo'),
+      'school_name' => session('school_name'),
+    ]);
 
     Vite::useStyleTagAttributes(function (?string $src, string $url, ?array $chunk, ?array $manifest) {
       if ($src !== null) {
