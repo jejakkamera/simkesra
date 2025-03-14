@@ -37,7 +37,7 @@ class ImportExcelJob implements ShouldQueue
     public function handle()
     {
         $importLog = ExcelImportLog::find($this->importLogId);
-
+        set_time_limit(600);
         try {
             // Lakukan impor data dari file Excel
             Excel::import(new StudentsImport($importLog->id, $this->periode, $this->skema),  $importLog->file_path);
@@ -53,14 +53,21 @@ class ImportExcelJob implements ShouldQueue
 
     public function failed(\Exception $exception = null)
     {
-        $importLog = ExcelImportLog::find($this->importLogId);
-        $importLog->status = 'failed';
 
-        if ($exception) {
-            // Menyimpan pesan kesalahan ke dalam note, jika ada
-            $importLog->notes = $exception->getMessage();
+        if ($exception instanceof \Exception || $exception instanceof \Error) {
+            // Log exception atau error yang terjadi
+            \Log::error('ImportExcelJob failed', [
+                'exception' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+        } else {
+            \Log::error('ImportExcelJob failed with unknown error');
         }
-
-        $importLog->save();
+    
+        // Anda bisa melakukan aksi tambahan di sini, misalnya mengupdate status di database
+        $importLog = ExcelImportLog::find($this->importLogId);
+        if ($importLog) {
+            $importLog->update(['status' => 'failed']);
+        }
     }
 }

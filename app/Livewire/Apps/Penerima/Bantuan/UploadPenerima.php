@@ -83,7 +83,6 @@ class UploadPenerima extends Component
         // // Dispatch job untuk memproses file di background
         ImportExcelJob::dispatch($importLog->id, $this->periode, $this->skema); // Passing periode and skema to the job
 
-
         // Kirim pesan sukses ke sesi
         session()->flash('success', 'File is being processed in the background.');
     }
