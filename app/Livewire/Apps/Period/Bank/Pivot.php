@@ -5,6 +5,8 @@ namespace App\Livewire\Apps\Period\Bank;
 use Livewire\Component;
 use App\Models\Pemenangan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class Pivot extends Component
 {
@@ -33,7 +35,7 @@ class Pivot extends Component
                     'pemenangan.jenis_rekening',
                     'pemenangan.tipe_rekening',
                     'pemenangan.id_verif_teller',
-                    'pemenangan.tanggal_verif_teller',
+                    DB::raw('DATE_FORMAT(pemenangan.tanggal_verif_teller, "%Y-%m-%d") as tanggal_verif_teller'),
                     'pemenangan.verif_teller',
                     'periods.name_period',
                     'profiles.tempat_mengajar',

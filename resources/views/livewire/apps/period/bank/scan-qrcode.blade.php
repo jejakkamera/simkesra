@@ -1,6 +1,12 @@
 <div>
     <livewire:Apps.Period.Bank.Dashboard />
     <hr>
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
 <meta name="csrf-token" content="your_csrf_token_value_here">
 <form id="myForm" action="/submit" method="POST">
     @csrf <!-- Menyertakan token CSRF dalam formulir -->

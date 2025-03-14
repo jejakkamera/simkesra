@@ -30,6 +30,7 @@ class Validateqr extends Controller
             $profile->nama_ibu = $request->nama_ibu;
             $profile->save();
 
+            session()->flash('message', 'Berhasil divalidasi');  // Corrected the redirection
             return redirect()->route(session('active_role') . '.PeriodFlagging', ['id_pendaftar' => $id_pendaftaran,'id_periode' => $model->periode])
             ->with(['success' => 'Berhasil divalidasi']);
 
