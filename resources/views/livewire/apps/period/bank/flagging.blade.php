@@ -238,8 +238,13 @@
         } else {
             // Menampilkan konfirmasi SweetAlert untuk melanjutkan pengiriman form
             Swal.fire({
-                title: 'Apakah Anda Yakin?',
-                html: "Data yang Anda masukkan akan disimpan.<br> Sebesar Rp. {{ number_format($pemenangan->skema->nominal) }} kepada {{  $pemenangan->nama_lengkap }} - {{ $pemenangan->nik }}",
+                title: 'Penyaluran Dana.',
+                html: `Konfirmasi Proses penyeluran. Apa anda yakin data ini sudah sesuai ? pastikan kembali data sesuai. <hr>
+        <ul>
+            <li>Besaran dana : <h1 style="color: red;"> Rp. {{ number_format($pemenangan->skema->nominal) }}</h1></li>
+            <li>Kepada : <h3 style="color: green;">{{ $pemenangan->nama_lengkap }}</h3></li>
+            <li>No. NIK : <h3 style="color: green;">{{ $pemenangan->nik }}</h3></li>
+        </ul>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Simpan',
