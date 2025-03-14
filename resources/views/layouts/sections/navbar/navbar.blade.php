@@ -79,7 +79,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   <div class="d-flex">
                     <div class="flex-shrink-0 me-3">
                       <div class="avatar avatar-online">
-                        <img src="{https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->email) }}&size=100&background=random&color=ffffff&bold=true" alt class="h-auto rounded-circle">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->email) }}&size=100&background=random&color=ffffff&bold=true" alt class="h-auto rounded-circle">
                       </div>
                     </div>
                     <div class="flex-grow-1">
