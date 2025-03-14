@@ -1,0 +1,27 @@
+{
+    "menu": [
+      {
+        "url": "bank/dashboard",
+        "name": "Home",
+        "icon": "menu-icon tf-icons ti ti-smart-home",
+        "slug": "pages-home"
+      },
+      {
+        "name": "Bank",
+        "icon": "menu-icon tf-icons ti ti-building-bank",
+        "slug": "Bank",
+        "submenu": [
+          {
+            "url": "bank/staff/teller/datalist",
+            "name": "Teller",
+            "slug": "Bank"
+          },
+          {
+            "url": "bank/apps/period/bank/datalist",
+            "name": "Periode",
+            "slug": "Bank"
+          }
+        ]
+      }
+    ]
+  }

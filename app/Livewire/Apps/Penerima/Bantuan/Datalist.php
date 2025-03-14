@@ -47,13 +47,17 @@ class Datalist extends PowerGridComponent
 
     public function header(): array
     {
-        return [
-            Button::add('upload-pemenang')
-                ->slot("<i class='fas fa-upload'></i>")
-                ->class('btn btn-success')
-                ->dispatch('UploadPemenang', [])
-                ->tooltip('Upload Pemenang'),
-        ];
+        if(session('active_role')=='admin'){
+            return [
+                Button::add('upload-pemenang')
+                    ->slot("<i class='fas fa-upload'></i>")
+                    ->class('btn btn-success')
+                    ->dispatch('UploadPemenang', [])
+                    ->tooltip('Upload Pemenang'),
+            ];
+        }else{
+            return [];
+        }
     }
 
     #[On('UploadPemenang')]
