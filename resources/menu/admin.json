@@ -1,0 +1,125 @@
+{
+  "menu": [
+    {
+      "url": "/admin/dashboard",
+      "name": "Home",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "pages-home"
+    },
+    {
+      "name": "User",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "Staff",
+      "submenu": [
+        {
+          "url": "/admin/staff/datalist",
+          "name": "Staff",
+          "slug": "Staff"
+        }
+      ]
+    },
+    {
+      "name": "Apps",
+      "icon": "menu-icon tf-icons ti ti-cloud-cog",
+      "slug": "Config",
+      "submenu": [
+        {
+          "url": "admin/apps/information",
+          "name": "Apps",
+          "slug": "Config"
+        },
+        {
+          "url": "admin/apps/dashboard/information/datalist",
+          "name": "Dashboard Information",
+          "slug": "Config"
+        },
+        {
+          "url": "admin/apps/period/datalist",
+          "name": "Periode",
+          "slug": "Config"
+        },
+        {
+          "url": "admin/apps/skema/datalist",
+          "name": "Skema",
+          "slug": "Config"
+        },
+        {
+          "url": "admin/apps/penerima/datalist",
+          "name": "Penerima",
+          "slug": "Config"
+        }
+      ]
+    },
+    {
+      "name": "Penerima",
+      "icon": "menu-icon tf-icons ti ti-report-money",
+      "slug": "Pendaftar",
+      "submenu": [
+        {
+          "url": "/admin/sekolah/siswa",
+          "name": "Forum DTA",
+          "slug": "Staff"
+        },
+        {
+          "url": "admin/sekolah/periode",
+          "name": "Forum MI",
+          "slug": "Staff"
+        },
+        {
+          "url": "admin/sekolah/tagihan",
+          "name": "Forum MTS",
+          "slug": "Staff"
+        },
+        {
+          "url": "admin/sekolah/tagihan",
+          "name": "Forum Amil",
+          "slug": "Staff"
+        },
+        {
+          "url": "admin/sekolah/tagihan",
+          "name": "Forum Marbot",
+          "slug": "Staff"
+        },
+        {
+          "url": "/admin/sekolah/tagihan/periode",
+          "name": "Forum TPQ",
+          "slug": "Staff"
+        }, 
+        {
+          "url": "admin/sekolah/tagihan",
+          "name": "Guru Ngaji",
+          "slug": "Staff"
+        }
+      ]
+    },
+    {
+      "name": "Bank",
+      "icon": "menu-icon tf-icons ti ti-building-bank",
+      "slug": "Bank",
+      "submenu": [
+        {
+          "url": "admin/staff/teller/datalist",
+          "name": "Teller",
+          "slug": "Bank"
+        },
+        {
+          "url": "/admin/apps/period/bank/datalist",
+          "name": "Periode",
+          "slug": "Bank"
+        }
+      ]
+    },
+    {
+      "name": "Teller",
+      "icon": "menu-icon tf-icons ti ti-user-dollar",
+      "slug": "Pendaftar",
+      "submenu": [
+        {
+          "url": "/admin/apps/period/bank/datalist",
+          "name": "Periode",
+          "slug": "Staff"
+        }
+      ]
+    }
+  ]
+}
