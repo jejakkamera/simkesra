@@ -58,6 +58,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/teller.php'));
 
+            Route::middleware('web')
+                ->prefix('unit')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/unit.php'));
+
         });
     }
 }

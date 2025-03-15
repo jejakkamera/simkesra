@@ -54,6 +54,11 @@ class Datalist extends PowerGridComponent
                     ->class('btn btn-success')
                     ->dispatch('UploadPemenang', [])
                     ->tooltip('Upload Pemenang'),
+                Button::add('cetak-pemenang')
+                    ->slot("<i class='fas fa-print'></i>")
+                    ->class('btn btn-info')
+                    ->dispatch('CetakPemenang', [])
+                    ->tooltip('Cetak All Kartu Tanda Pemenang Bantuan'),
             ];
         }else{
             return [];
@@ -64,6 +69,12 @@ class Datalist extends PowerGridComponent
     public function UploadPemenang()
     {
         $this->redirectRoute(session('active_role') . '.PenerimaBantuanUploadPenerima', ['periode' => $this->Period]);
+    }
+    
+    #[On('CetakPemenang')]
+    public function CetakPemenang()
+    {
+        $this->redirectRoute(session('active_role') . '.PenerimaBantuanKartuall', []);
     }
 
     public function setUp(): array
@@ -261,7 +272,7 @@ class Datalist extends PowerGridComponent
         ]);
 
         session()->flash('message', 'User Unflag successfully');
-        $this->redirectRoute(session('active_role') . '.PenerimaBantuanDatalist');
+        $this->redirectRoute(session('active_role') . '.PenerimaBantuanDatalist',['periode' => $this->Period]);
     }
    
 

@@ -11,16 +11,16 @@ use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
-class Kartu extends Controller
+class Kartuall extends Controller
 {
     public $uuid;
     public $profile;
 
-    public function index($id)
+    public function index()
     {   
         $this->uuid = request()->query('UserId');
         $this->profile = Pemenangan::join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
-                                    ->where('pemenangan.id', $id)
+                                    
                                     ->select('pemenangan.*', 'profiles.*','wilayah_kec.*','pemenangan.id as uuid') // Sesuaikan dengan kolom yang ingin diambil
                                     ->with(['period', 'skema']) // Load relasi period dan skema
                                     ->get();

@@ -36,7 +36,7 @@
 </head>
 
 <body class="A4">
-
+    @foreach ($profiles as $profile)
     <section class="sheet halaman1 padding-10mm" >
         <article>
             <center>
@@ -105,7 +105,8 @@
 
 
 </div>
-
+<hr style="page-break-before: always;">
+@endforeach
 <script>
     window.print()
   </script>
