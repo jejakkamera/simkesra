@@ -2,17 +2,15 @@
 
 namespace App\Livewire\Apps\Penerima;
 
-
 use Livewire\Component;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Facades\PowerGrid; 
-use PowerComponents\LivewirePowerGrid\{Button, Column, Footer, Header,  PowerGridEloquent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Button, Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use App\Models\Profile;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use \Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Log;
 
 class Datalist extends PowerGridComponent
 {
@@ -28,7 +26,7 @@ class Datalist extends PowerGridComponent
         $query = Profile::query()
         ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan') // Join dengan tabel departments
         ->select(
-            '*', // Semua kolom 
+            '*','profiles.id as userid' // Semua kolom 
         );
         return $query;
     }
@@ -101,7 +99,7 @@ class Datalist extends PowerGridComponent
         return [
             Button::add('edit')
                 ->slot("<i class='fas fa-edit'></i>")
-                ->route(session('active_role') . '.UserEdit', ['UserId' => $row->id])
+                ->route(session('active_role') . '.PenerimaEdit', ['UserId' => $row->userid])
                 ->class('btn btn-xs btn-outline-warning')->tooltip('Edit Record'),
         ];
     }
