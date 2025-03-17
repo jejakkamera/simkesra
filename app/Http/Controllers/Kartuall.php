@@ -10,12 +10,47 @@ use App\Models\Profile;
 use App\Imports\StudentsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
+use Illuminate\Http\Request;
 
 class Kartuall extends Controller
 {
     public $uuid;
     public $profile;
+
+    public function tandaterima(Request $request)
+    {   
+        $validated = $request->validate([
+            'kecamatan_id' => 'required|exists:wilayah_kec,id_wil',
+        ]);
+
+        // Ambil datanya
+        $kecamatanId = $validated['kecamatan_id'];
+        $this->uuid = request()->query('UserId');
+        $pivotQuery = Pemenangan::query()
+                ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
+                ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
+                ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') 
+                ->where('wilayah_kec.id_wil', $kecamatanId)
+                ->orderBy('profiles.desa','ASC')
+                ->select(
+                    'pemenangan.*',
+                    'profiles.nama_lengkap',
+                    'profiles.nik',
+                    'profiles.tempat_mengajar',
+                    'profiles.desa',
+                    'profiles.alamat',
+                    'wilayah_kec.nm_wil',
+                    'bantuan.judul as bantuan_judul',
+                    'bantuan.nominal as bantuan_nominal',
+                    'bantuan.wilayah as bantuan_wilayah',
+                    'pemenangan.id as uuid'
+                )
+                ->get()
+                ->groupBy('desa'); 
+
+            return view('livewire.apps.penerima.bantuan.beritaacara',compact('pivotQuery'));
+            
+    }
 
     public function index()
     {   

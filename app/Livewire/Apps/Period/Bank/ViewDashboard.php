@@ -18,38 +18,17 @@ use Filament\Forms\Components\Select;
 use App\Models\Skema;
 use App\Models\WilayahKec;
 
-class ViewDashboard extends Component implements HasForms
+class ViewDashboard extends Component 
 {
     public string $periode;
     public $pivotData;
-    use InteractsWithForms;
     public ?array $data = [];
 
     public function mount(Request $request)
     {
         $this->periode = $request->query('periode');
-        $this->form->fill();
     }
 
-   
-
-    public function form(Form $form): Form
-    {
-        return $form
-        ->schema([
-        Section::make()
-            ->schema([
-                Select::make('roles')
-                    ->options(Skema::pluck('judul', 'judul')->map(function($name) {
-                        return ucwords($name);
-                    })->toArray()),
-                Select::make('kecamatan')
-                    ->options(WilayahKec::where('id_induk_wilayah','022100')->pluck('nm_wil', 'nm_wil')->map(function($name) {
-                        return ucwords($name);
-                    })->toArray())
-              ])->statePath('data')
-        ]);
-    }
 
     public function render()
     {
@@ -77,7 +56,8 @@ class ViewDashboard extends Component implements HasForms
                 )
                 ->where('periode', $this->periode )
                 ->get();
-      
-        return view('livewire.apps.period.bank.view-dashboard',['pemenangan' =>$this->pivotData]);
+        
+            $kecamatan = WilayahKec::where('id_induk_wilayah','022100')->get();
+        return view('livewire.apps.period.bank.view-dashboard',['pemenangan' =>$this->pivotData,'kecamatan'=>$kecamatan]);
     }
 }

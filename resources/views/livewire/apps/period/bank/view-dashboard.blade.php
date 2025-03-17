@@ -10,27 +10,24 @@
         @php
             if(session('active_role') !=='unit'){
         @endphp
-        <div class="row">
-            <div >
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Cetak Tanda Terima</h4>
-                        
-                    </div>
-                    <div class="card-body">
-                        <form wire:submit.prevent="save"> <!-- Note the use of .prevent -->
-                            {{ $this->form }}
-                            <br>
-                            <button type="submit" class="btn btn-primary">
-                                Submit
-                            </button>
-                        </form>
-        
-                        <x-filament-actions::modals />
-                    </div>
-                </div>
-            </div>
+        <form action="{{ route('TandaTerima') }}" method="POST">
+        @csrf
+
+        <div class="mb-3">
+            <label for="kecamatan_id" class="form-label">Nama Kecamatan</label>
+            <select name="kecamatan_id" id="kecamatan_id" class="form-select" required>
+                <option value="">-- Pilih Kecamatan --</option>
+                @foreach ($kecamatan as $item)
+                    <option value="{{ $item->id_wil }}">{{ $item->nm_wil }}</option>
+                @endforeach
+            </select>
+            @error('kecamatan_id')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
         <br>
         <div class="row">

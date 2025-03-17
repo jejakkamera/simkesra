@@ -17,6 +17,7 @@ class Datalist extends PowerGridComponent
 
     use WithExport;
     public string $sortField = 'name';
+    public string $tableName = 'userlist1';
 
 
     public function datasource(): Builder
@@ -59,6 +60,7 @@ class Datalist extends PowerGridComponent
         return [
             Filter::inputText('name')->operators(['contains']),
             Filter::inputText('email')->operators(['contains']),
+            Filter::inputText('role')->operators(['contains']),
         ];
     }
 
@@ -71,7 +73,7 @@ class Datalist extends PowerGridComponent
             Column::make('Email', 'email')
                 ->searchable()
                 ->sortable(),
-            Column::make('Roles', 'roles_list') // Using the custom accessor
+            Column::make('Roles', 'roles_list','role') // Using the custom accessor
                 ->searchable(),
             Column::make('Created At', 'created_at')
                 ->searchable()
