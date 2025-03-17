@@ -50,48 +50,7 @@
         }
       ]
     },
-    {
-      "name": "Penerima",
-      "icon": "menu-icon tf-icons ti ti-report-money",
-      "slug": "Pendaftar",
-      "submenu": [
-        {
-          "url": "/admin/sekolah/siswa",
-          "name": "Forum DTA",
-          "slug": "Staff"
-        },
-        {
-          "url": "admin/sekolah/periode",
-          "name": "Forum MI",
-          "slug": "Staff"
-        },
-        {
-          "url": "admin/sekolah/tagihan",
-          "name": "Forum MTS",
-          "slug": "Staff"
-        },
-        {
-          "url": "admin/sekolah/tagihan",
-          "name": "Forum Amil",
-          "slug": "Staff"
-        },
-        {
-          "url": "admin/sekolah/tagihan",
-          "name": "Forum Marbot",
-          "slug": "Staff"
-        },
-        {
-          "url": "/admin/sekolah/tagihan/periode",
-          "name": "Forum TPQ",
-          "slug": "Staff"
-        }, 
-        {
-          "url": "admin/sekolah/tagihan",
-          "name": "Guru Ngaji",
-          "slug": "Staff"
-        }
-      ]
-    },
+   
     {
       "name": "Bank",
       "icon": "menu-icon tf-icons ti ti-building-bank",

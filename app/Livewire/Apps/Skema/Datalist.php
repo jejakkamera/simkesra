@@ -89,11 +89,7 @@ class Datalist extends PowerGridComponent
             Button::add('edit')
                 ->slot("<i class='fas fa-edit'></i>")
                 ->route(session('active_role') . '.SkemaEdit', ['KeyId' => $row->id])
-                ->class('btn btn-xs btn-outline-warning')->tooltip('Edit Record'),
-            Button::add('role')
-                ->slot("<i class='fas fa-user'></i>")
-                ->route(session('active_role') . '.UserPlotRole', ['UserId' => $row->id])
-                ->class('btn btn-xs btn-outline-info')->tooltip('Plot User')
+                ->class('btn btn-xs btn-outline-warning')->tooltip('Edit Record')
         ];
     }
 
