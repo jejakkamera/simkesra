@@ -12,6 +12,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 
+ini_set('max_execution_time', 300);
+ini_set('memory_limit', '2048M');
+
 class Kartuall extends Controller
 {
     public $uuid;
