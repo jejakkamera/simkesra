@@ -7,6 +7,9 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js'></script>
         
+        @php
+            if(session('active_role') !=='unit'){
+        @endphp
         <div class="row">
             <div >
                 <div class="card">
@@ -40,6 +43,9 @@
                 </div>
             </div>
         </div>
+        @php
+            }
+        @endphp
 
     <script>
         var salesPivotData = <?php echo json_encode($pivotData); ?> ;

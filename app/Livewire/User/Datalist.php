@@ -93,6 +93,10 @@ class Datalist extends PowerGridComponent
                 ->slot("<i class='fas fa-user'></i>")
                 ->route(session('active_role') . '.UserPlotRole', ['UserId' => $row->id])
                 ->class('btn btn-xs btn-outline-info')->tooltip('Plot Role'),
+            Button::add('skema')
+                ->slot("<i class='fas fa-cloud'></i>")
+                ->route(session('active_role') . '.UserPlotSkema', ['UserId' => $row->id])
+                ->class('btn btn-xs btn-outline-info')->tooltip('Plot Skema'),
             Button::add('delete')
                 ->slot("<i class='fas fa-trash'></i>")
                 ->class('btn btn-xs btn-outline-danger')

@@ -6,6 +6,7 @@ use Livewire\Component;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use App\Models\Pemenangan;
+use App\Models\UserBantuan;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use \Illuminate\Database\Eloquent\Builder;
@@ -41,6 +42,15 @@ class Datalist extends PowerGridComponent
         $query->where('periode', $this->Period);
     }
 
+    if(session('active_role')=='unit'){
+        $filterIds = UserBantuan::query()
+            ->where('user_id', auth()->user()->id)
+            ->pluck('bantuan_id') // Ambil kolom yang dipakai buat filtering
+            ->toArray();
+
+            $query->whereIn('bantuan.id', $filterIds);
+    }
+
     return $query;
 
     }
@@ -54,6 +64,14 @@ class Datalist extends PowerGridComponent
                     ->class('btn btn-success')
                     ->dispatch('UploadPemenang', [])
                     ->tooltip('Upload Pemenang'),
+                Button::add('cetak-pemenang')
+                    ->slot("<i class='fas fa-print'></i>")
+                    ->class('btn btn-info')
+                    ->dispatch('CetakPemenang', [])
+                    ->tooltip('Cetak All Kartu Tanda Pemenang Bantuan'),
+            ];
+        }elseif(session('active_role')=='unit' || session('active_role')=='teller' || session('active_role')=='bank'){
+            return [
                 Button::add('cetak-pemenang')
                     ->slot("<i class='fas fa-print'></i>")
                     ->class('btn btn-info')
@@ -227,6 +245,14 @@ class Datalist extends PowerGridComponent
                     ->slot("<i class='fa-solid fa-handshake-slash'></i>")
                     ->class('btn btn-xs btn-outline-danger')
                     ->dispatch('unflag', ['id' => $row->uuid]),
+            ];
+        }elseif(session('active_role')=='unit'){
+            return [
+                Button::add('profile')
+                    ->slot("<i class='fas fa-edit'></i>")
+                    // ->route(session('active_role') . '.UserEdit', ['UserId' => $row->id])
+                    ->class('btn btn-xs
+                    btn-outline-secondary')->tooltip('Edit Record'),
             ];
         }elseif(session('active_role')=='teller'){
             return [

@@ -93,6 +93,7 @@ class Datalist extends PowerGridComponent
 
     public function actions(Periode $row): array
     {
+        
         return [
             Button::add('skema')
                 ->slot("<i class='menu-icon tf-icons ti ti-report-money'></i>")

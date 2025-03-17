@@ -6,6 +6,7 @@ use App\Livewire\User\Datalist as UserDatalist;
 use App\Livewire\User\Add as UserCreate;
 use App\Livewire\User\Edit as UserEdit;
 use App\Livewire\User\PlotRole as UserPlotRole;
+use App\Livewire\User\Skema\Plot as UserPlotSkema;
 
 use App\Livewire\User\Staff\Datalist as UserDatalistStaff;
 use App\Livewire\User\Staff\Add as UserCreateStaff;
@@ -38,8 +39,10 @@ use App\Livewire\Apps\Penerima\Edit as PenerimaEdit;
 
 use App\Livewire\Apps\Penerima\Bantuan\Datalist as PenerimaBantuanDatalist;
 use App\Livewire\Apps\Penerima\Bantuan\UploadPenerima as PenerimaBantuanUploadPenerima;
+use App\Livewire\Apps\Penerima\Bantuan\FormCetak as PenerimaBantuanFormCetak;
 use App\Http\Controllers\Kartu as PenerimaBantuanKartu;
 use App\Http\Controllers\Kartuall as PenerimaBantuanKartuall;
+
 use App\Http\Controllers\Validateqr as Validateqr;
 
 
@@ -54,6 +57,7 @@ Route::middleware(['auth', 'checkActiveRole:admin'])->group(function () {
     Route::get('/staff/add', UserCreate::class)->name('admin.UserCreate');
     Route::get('/staff/edit', UserEdit::class)->name('admin.UserEdit');
     Route::get('/staff/plotrole', UserPlotRole::class)->name('admin.UserPlotRole');
+    Route::get('/staff/plot/plotskema', UserPlotSkema::class)->name('admin.UserPlotSkema');
 
     Route::get('/apps/information', AppsInformation::class)->name('admin.AppsInformation');
     Route::get('/apps/information/edit', AppsInformationEdit::class)->name('admin.AppsInformationEdit');
@@ -85,6 +89,7 @@ Route::middleware(['auth', 'checkActiveRole:admin'])->group(function () {
 
     Route::get('/apps/penerima/bantuan/datalist', PenerimaBantuanDatalist::class)->name('admin.PenerimaBantuanDatalist');
     Route::get('/apps/penerima/bantuan/upload-penerima', PenerimaBantuanUploadPenerima::class)->name('admin.PenerimaBantuanUploadPenerima');
+    Route::get('/apps/penerima/form/cetak', PenerimaBantuanFormCetak::class)->name('admin.PenerimaBantuanFormCetak');
 
     Route::get('/apps/penerima/bantuan/kartu/{UserId}', [PenerimaBantuanKartu::class, 'index'])->name('admin.PenerimaBantuanKartu');
     Route::get('/apps/penerima/bantuan/kartuall', [PenerimaBantuanKartuall::class, 'index'])->name('admin.PenerimaBantuanKartuall');

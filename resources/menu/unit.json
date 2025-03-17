@@ -1,0 +1,23 @@
+{
+    "menu": [
+      {
+        "url": "unit/dashboard",
+        "name": "Home",
+        "icon": "menu-icon tf-icons ti ti-smart-home",
+        "slug": "pages-home"
+      },
+      {
+        "name": "Unit",
+        "icon": "menu-icon tf-icons ti ti-user-dollar",
+        "slug": "Pendaftar",
+        "submenu": [
+         
+          {
+            "url": "/unit/apps/period/unit/datalist",
+            "name": "Periode",
+            "slug": "Staff"
+          }
+        ]
+      }
+    ]
+  }

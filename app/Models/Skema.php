@@ -21,4 +21,10 @@ class Skema extends Model
         'is_active',
     ];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_bantuan', 'bantuan_id', 'user_id')
+                    ->withTimestamps();
+    }
+
 }

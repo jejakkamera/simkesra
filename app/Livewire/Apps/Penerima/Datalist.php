@@ -96,12 +96,15 @@ class Datalist extends PowerGridComponent
 
     public function actions(Profile $row): array
     {
-        return [
-            Button::add('edit')
-                ->slot("<i class='fas fa-edit'></i>")
-                ->route(session('active_role') . '.PenerimaEdit', ['UserId' => $row->userid])
-                ->class('btn btn-xs btn-outline-warning')->tooltip('Edit Record'),
-        ];
+       
+            return [
+                Button::add('edit')
+                    ->slot("<i class='fas fa-edit'></i>")
+                    ->route(session('active_role') . '.PenerimaEdit', ['UserId' => $row->userid])
+                    ->class('btn btn-xs btn-outline-warning')->tooltip('Edit Record'),
+            ];
+       
+        
     }
 
 }

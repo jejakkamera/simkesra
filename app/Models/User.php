@@ -78,4 +78,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         $this->notify(new SendVerify());
     }
+
+    public function bantuan()
+    {
+        return $this->belongsToMany(Skema::class, 'user_bantuan', 'user_id', 'bantuan_id')
+                    ->withTimestamps();
+    }
 }

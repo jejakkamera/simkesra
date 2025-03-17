@@ -21,6 +21,9 @@
             </div>
           </div>
         </div>
+        @php
+            if(session('active_role') !=='unit'){
+        @endphp
         <div class="col-md">
           <div class="card text-bg-warning text-decoration-none" wire:click="scanBarcode" style="cursor: pointer;">
             <div class="card-body">
@@ -28,5 +31,8 @@
             </div>
           </div>
         </div>
+        @php
+            }
+        @endphp
        
 </div>

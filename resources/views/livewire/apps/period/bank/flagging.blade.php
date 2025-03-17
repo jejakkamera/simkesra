@@ -153,6 +153,7 @@
                 </div>
 
                 <h2>Rp. {{ number_format($pemenangan->skema->nominal)  }}</h2>
+                Sekema : {{ $pemenangan->skema->judul }} <br>
 
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
