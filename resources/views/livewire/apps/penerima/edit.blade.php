@@ -77,5 +77,40 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Foto
+                </div>
+                <div class="card-body">
+                   
+    
+                   
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Foto KTP</label>
+                            <div class="border p-3 rounded shadow-sm text-center">
+                                <img src="{{ url('storage/'.$pemenangan->fotoktp) }}" alt="Foto KTP" 
+                                    class="img-fluid rounded" 
+                                    style="max-height: 300px; object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Foto Diri</label>
+                            <div class="border p-3 rounded shadow-sm text-center">
+                                <img src="{{ url('storage/'.$pemenangan->fotodiri) }}" alt="Foto KTP" 
+                                    class="img-fluid rounded" 
+                                    style="max-height: 300px; object-fit: cover;">
+                            </div>
+                        </div>
+                        
+                        
+               
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+   
 </div>

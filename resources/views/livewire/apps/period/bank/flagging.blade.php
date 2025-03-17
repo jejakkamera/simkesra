@@ -317,6 +317,7 @@
                 html: `Konfirmasi proses penyaluran. Apakah Anda yakin data ini sudah sesuai? Pastikan kembali data sesuai.<hr>
                 <ul>
                     <li>Besaran dana: <h1 style="color: red;">Rp. {{ number_format($pemenangan->skema->nominal) }}</h1></li>
+                    <li>Skema: <h3 style="color: green;">{{ ($pemenangan->skema->judul) }}</h3></li>
                     <li>Kepada: <h3 style="color: green;">{{ $pemenangan->nama_lengkap }}</h3></li>
                     <li>No. NIK: <h3 style="color: green;">{{ $pemenangan->nik }}</h3></li>
                 </ul>`,
