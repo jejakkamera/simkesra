@@ -49,7 +49,30 @@
             padding: 2px 4px;
         }
 
+        table {
+            page-break-inside: auto;
+        }
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        thead {
+            display: table-header-group;
+        }
+        tfoot {
+            display: table-footer-group;
+        }
+
+        section.sheet {
+        break-after: page;
+        }
+        section.sheet {
+        overflow: visible;
+        }
+
+
     </style>
+    <style>@page { size: A4 }</style>
 </head>
 
 <body class="A4">
@@ -74,6 +97,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php $hitung=1; @endphp
                     @foreach ($items as $key => $item)
                         <tr>
                             <td style="text-align: center;">{{ $key + 1 }}</td>
@@ -82,6 +106,29 @@
                             <td>Rp {{ number_format($item->skema->nominal) }}</td>
                             <td></td>
                         </tr>
+                        @php
+                            if($hitung > 22){
+                        @endphp
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="sheet padding-10mm">
+                                <table class="rekap" style="margin-top: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 5%;">No</th>
+                                            <th style="width: 25%;">Nama</th>
+                                            <th style="width: 30%;">Alamat</th>
+                                            <th style="width: 20%;">Besaran uang</th>
+                                            <th style="width: 20%;">Tanda Tangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                        @php
+                        $hitung=0;
+                            }
+                            $hitung++;
+                        @endphp
                     @endforeach
                 </tbody>
             </table>
@@ -109,7 +156,14 @@
                     $totalNominalDesa += $nominal;
                 }
             @endphp
-
+             @php
+                if($hitung > 12){
+            @endphp
+                </section>
+                <section class="sheet padding-10mm">
+            @php
+                }
+            @endphp
             <h4>Rekapitulasi Bantuan di Desa {{ $desa }}</h4>
             <table class="rekap" style="margin-top: 10px;">
                 <thead>
@@ -129,6 +183,7 @@
                             <td style="text-align: center;">{{ $data['jumlah_penerima'] }}</td>
                             <td>Rp {{ number_format($data['total_nominal']) }}</td>
                         </tr>
+                        
                     @endforeach
                     <tr style="font-weight: bold;">
                         <td colspan="2" style="text-align: center;">TOTAL</td>

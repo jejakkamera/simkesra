@@ -32,6 +32,8 @@ class Kartuall extends Controller
                 ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') 
                 ->where('wilayah_kec.id_wil', $kecamatanId)
                 ->orderBy('profiles.desa','ASC')
+                ->orderBy('bantuan.judul','ASC') // lalu urut bantuan
+                ->orderBy('profiles.nama_lengkap','ASC') // lalu urut nama
                 ->select(
                     'pemenangan.*',
                     'profiles.nama_lengkap',

@@ -40,7 +40,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     {
         DB::beginTransaction();
         
-        try {
+        // try {
             if (!empty($row['nik']) && !is_null($row['nama_lengkap']) && !is_null($row['nama_ibu_kandung']) &&  !is_null($row['kecamatan'])) {
                
                 
@@ -80,7 +80,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                    
                     $statuspemenangan='Exist';
                     $Pemenangan = Pemenangan::with('skema')->where('profile_id', $id)->where('periode',$this->periode)->first();
-                    
+                    // dd($profile->id);
                     if(!$Pemenangan){
                         
                         $pemenang=Pemenangan::create([
@@ -147,18 +147,18 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 
                 return null;
             }
-        } catch (\Exception $e) {
-            // Rollback transaction jika ada kesalahan
-            DB::rollBack();
+        // } catch (\Exception $e) {
+        //     // Rollback transaction jika ada kesalahan
+        //     DB::rollBack();
 
-            // Buat log dengan status failed dan catat error
-            ExcelImportLogDetail::create([
-                'import_log_id' => $this->importLog,
-                // 'user_id' => null,
-                'status' => 'failed',
-                'note' => 'Error: ' . $e->getMessage(),
-            ]);
-        }
+        //     // Buat log dengan status failed dan catat error
+        //     ExcelImportLogDetail::create([
+        //         'import_log_id' => $this->importLog,
+        //         // 'user_id' => null,
+        //         'status' => 'failed',
+        //         'note' => 'Error: ' . $e->getMessage(),
+        //     ]);
+        // }
 
         return null;
     }
