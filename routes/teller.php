@@ -40,6 +40,7 @@ use App\Livewire\Apps\Penerima\Bantuan\Datalist as PenerimaBantuanDatalist;
 use App\Livewire\Apps\Penerima\Bantuan\UploadPenerima as PenerimaBantuanUploadPenerima;
 use App\Http\Controllers\Kartu as PenerimaBantuanKartu;
 use App\Http\Controllers\Validateqr as Validateqr;
+use App\Http\Controllers\Kartuall as PenerimaBantuanKartuall;
 
 // Rute untuk dashboard pendaftar
 Route::middleware(['auth', 'checkActiveRole:teller'])->group(function () {
@@ -62,4 +63,6 @@ Route::middleware(['auth', 'checkActiveRole:teller'])->group(function () {
     Route::get('/apps/penerima/edit', PenerimaEdit::class)->name('teller.PenerimaEdit');
     Route::get('/apps/penerima/bantuan/datalist', PenerimaBantuanDatalist::class)->name('teller.PenerimaBantuanDatalist');
     Route::get('/apps/penerima/bantuan/kartu/{UserId}', [PenerimaBantuanKartu::class, 'index'])->name('teller.PenerimaBantuanKartu');
+    Route::get('/apps/penerima/bantuan/kartuall', [PenerimaBantuanKartuall::class, 'index'])->name('teller.PenerimaBantuanKartuall');
+    Route::post('/apps/penerima/bantuan/tandaterima', [PenerimaBantuanKartuall::class, 'tandaterima'])->name('teller.TandaTerima');
 });

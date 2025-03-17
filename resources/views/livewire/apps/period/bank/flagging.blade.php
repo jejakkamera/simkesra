@@ -112,6 +112,10 @@
             @php
                 if($pemenangan->verif_teller!='Selesai'){
             @endphp
+            <select id="camera-list"></select>
+            <button class="btn btn-outline-primary" onclick="changeCamera()">Change Camera</button>
+            <button class="btn btn-outline-info" onclick="startCamera()">Start Camera</button>
+            <hr>
             <form id="formaction" action="{{ $action }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -164,72 +168,143 @@
         </div>
     </div>
 </div>
-<script>
-    // Initialize WebcamJS for KTP capture
+<script type="text/javascript">
+    // Referensi ke elemen dropdown kamera
+    const cameraList = document.getElementById("camera-list");
+
+    // Fungsi untuk menyimpan kamera yang dipilih ke localStorage
+    function saveSelectedCameraId(cameraId) {
+        localStorage.setItem('selectedCameraId', cameraId);
+    }
+
+    // Fungsi untuk mengambil kamera yang dipilih dari localStorage
+    function getSavedCameraId() {
+        return localStorage.getItem('selectedCameraId');
+    }
+
+    // Fungsi enumerasi semua kamera yang tersedia
+    function enumerateCameras() {
+        navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                cameraList.innerHTML = ''; // Kosongkan list supaya tidak duplikat
+
+                if (videoDevices.length > 0) {
+                    videoDevices.forEach((device, index) => {
+                        const option = document.createElement("option");
+                        option.value = device.deviceId;
+                        option.text = device.label || `Camera ${index + 1}`;
+                        cameraList.appendChild(option);
+                    });
+
+                    const savedCameraId = getSavedCameraId();
+
+                    if (savedCameraId && videoDevices.find(d => d.deviceId === savedCameraId)) {
+                        startCamera(savedCameraId);
+                        cameraList.value = savedCameraId;
+                    } else {
+                        startCamera(videoDevices[0].deviceId);
+                    }
+                } else {
+                    console.error("No video devices found.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error enumerating devices:", error);
+            });
+    }
+
+    // Fungsi untuk mulai kamera
+    function startCamera(cameraId) {
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 70,
+            constraints: {
+                deviceId: cameraId ? { exact: cameraId } : undefined
+            }
+        });
+
+        Webcam.attach('#webcam-container');
+        Webcam.attach('#webcam-container-foto-diri');
+    }
+
+    // Fungsi untuk stop kamera (tidak wajib untuk WebcamJS, tapi didefinisikan kalau mau dikembangkan)
+    function stopCamera() {
+        Webcam.reset();
+    }
+
+    // Fungsi untuk mengganti kamera ketika user memilih dari dropdown
+    window.changeCamera = function () {
+        const selectedCameraId = cameraList.value;
+        stopCamera();
+        startCamera(selectedCameraId);
+        saveSelectedCameraId(selectedCameraId);
+    };
+
+    // Inisialisasi kamera setelah izin diberikan
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(() => enumerateCameras())
+        .catch(err => console.error("Camera permission denied!", err));
+
+    // Konfigurasi WebcamJS untuk KTP
     Webcam.set({
         width: 320,
         height: 240,
         image_format: 'jpeg',
         jpeg_quality: 70
     });
-    
     Webcam.attach('#webcam-container');
-    
-    document.getElementById('capture-button-ktp').addEventListener('click', function() {
-        Webcam.snap(function(data_uri) {
+
+    // Tombol ambil foto KTP
+    document.getElementById('capture-button-ktp').addEventListener('click', function () {
+        Webcam.snap(function (data_uri) {
             document.getElementById('snapshot-ktp').src = data_uri;
             document.getElementById('snapshot-ktp').style.display = 'block';
-            // Save the image as a hidden input field value
             document.getElementById('ktp_image').value = data_uri;
         });
     });
 
-    // Initialize WebcamJS for Foto Diri capture
+    // Konfigurasi WebcamJS untuk Foto Diri
     Webcam.set({
         width: 320,
         height: 240,
         image_format: 'jpeg',
         jpeg_quality: 70
     });
-    
     Webcam.attach('#webcam-container-foto-diri');
-    
-    document.getElementById('capture-button-foto-diri').addEventListener('click', function() {
-        Webcam.snap(function(data_uri) {
+
+    // Tombol ambil foto diri
+    document.getElementById('capture-button-foto-diri').addEventListener('click', function () {
+        Webcam.snap(function (data_uri) {
             document.getElementById('snapshot-foto-diri').src = data_uri;
             document.getElementById('snapshot-foto-diri').style.display = 'block';
-            // Save the image as a hidden input field value
             document.getElementById('foto_diri_image').value = data_uri;
         });
     });
-</script>
 
-<script type="text/javascript">
-    document.querySelector("#formaction").addEventListener("submit", function(event) {
-        // Mencegah pengiriman form otomatis
-        event.preventDefault();
+    // Validasi sebelum formaction submit
+    document.querySelector("#formaction").addEventListener("submit", function (event) {
+        event.preventDefault(); // Stop auto submit
 
-        // Menangkap semua input yang harus diisi
         var verifTeller = document.querySelector('select[name="verif_teller"]').value;
         var noRekening = document.querySelector('input[name="no_rekening"]').value;
-        
-        // Memeriksa apakah gambar KTP telah diambil
-        var fotoDiriInput = document.querySelector('#snapshot-foto-diri');
+
         var fotoDiriImage = document.querySelector('#snapshot-foto-diri');
         var isFotoDiriEmpty = !fotoDiriImage || fotoDiriImage.src === "" || fotoDiriImage.src === "data:," || fotoDiriImage.style.display === 'none';
-        
-        var fotoktpInput = document.querySelector('#snapshot-ktp');
+
         var fotoktpImage = document.querySelector('#snapshot-ktp');
         var isKtpImageEmpty = !fotoktpImage || fotoktpImage.src === "" || fotoktpImage.src === "data:," || fotoktpImage.style.display === 'none';
 
+        // Debug console
+        console.log("Verif Teller:", verifTeller);
+        console.log("No Rekening:", noRekening);
+        console.log("Foto Diri kosong:", isFotoDiriEmpty);
+        console.log("KTP kosong:", isKtpImageEmpty);
 
-
-        // Menampilkan hasil pemeriksaan di konsol untuk debugging
-        console.log("Foto Diri kosong: ", isFotoDiriEmpty);
-        console.log("KTP kosong: ", isKtpImageEmpty);
-                // Memeriksa apakah semua input sudah diisi
+        // Validasi input form
         if (verifTeller === "" || noRekening === "" || isFotoDiriEmpty || isKtpImageEmpty) {
-            // Menampilkan SweetAlert jika ada field yang belum diisi
             Swal.fire({
                 title: 'Gagal!',
                 text: 'Semua field harus diisi! Pastikan Anda sudah mengupload foto KTP dan Foto Diri.',
@@ -237,29 +312,35 @@
                 confirmButtonText: 'OK'
             });
         } else {
-            // Menampilkan konfirmasi SweetAlert untuk melanjutkan pengiriman form
             Swal.fire({
-                title: 'Penyaluran Dana.',
-                html: `Konfirmasi Proses penyeluran. Apa anda yakin data ini sudah sesuai ? pastikan kembali data sesuai. <hr>
-        <ul>
-            <li>Besaran dana : <h1 style="color: red;"> Rp. {{ number_format($pemenangan->skema->nominal) }}</h1></li>
-            <li>Kepada : <h3 style="color: green;">{{ $pemenangan->nama_lengkap }}</h3></li>
-            <li>No. NIK : <h3 style="color: green;">{{ $pemenangan->nik }}</h3></li>
-        </ul>`,
+                title: 'Penyaluran Dana',
+                html: `Konfirmasi proses penyaluran. Apakah Anda yakin data ini sudah sesuai? Pastikan kembali data sesuai.<hr>
+                <ul>
+                    <li>Besaran dana: <h1 style="color: red;">Rp. {{ number_format($pemenangan->skema->nominal) }}</h1></li>
+                    <li>Kepada: <h3 style="color: green;">{{ $pemenangan->nama_lengkap }}</h3></li>
+                    <li>No. NIK: <h3 style="color: green;">{{ $pemenangan->nik }}</h3></li>
+                </ul>`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
+                confirmButtonText: 'Ya, Lanjutkan!',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Jika pengguna menekan "Ya, Simpan", maka form akan disubmit
-                    event.target.submit();
+                    // Kirim form jika user konfirmasi
+                    document.querySelector("#formaction").submit();
+                } else {
+                    Swal.fire({
+                        title: 'Dibatalkan',
+                        text: 'Proses dibatalkan!',
+                        icon: 'info',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }
     });
 </script>
+
 
 
 </div>

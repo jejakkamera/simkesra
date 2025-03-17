@@ -8,9 +8,46 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js'></script>
         
         @php
+            if(session('active_role') =='unit'){
+        @endphp
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title
+                        ">List Skema</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Skema</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($filterIds as $key => $item)
+                                    <tr>
+                                        <td>{{ $key+1 }}</td>
+                                        <td>{{ $item->judul }}</td>
+                                       
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @php
+            }
+        @endphp
+
+        @php
             if(session('active_role') !=='unit'){
         @endphp
-        <form action="{{ route('TandaTerima') }}" method="POST">
+        <form action="{{ route(session('active_role').'.TandaTerima') }}" method="POST">
         @csrf
 
         <div class="mb-3">

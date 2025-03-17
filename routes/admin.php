@@ -42,7 +42,6 @@ use App\Livewire\Apps\Penerima\Bantuan\UploadPenerima as PenerimaBantuanUploadPe
 use App\Livewire\Apps\Penerima\Bantuan\FormCetak as PenerimaBantuanFormCetak;
 use App\Http\Controllers\Kartu as PenerimaBantuanKartu;
 use App\Http\Controllers\Kartuall as PenerimaBantuanKartuall;
-
 use App\Http\Controllers\Validateqr as Validateqr;
 
 
@@ -93,7 +92,7 @@ Route::middleware(['auth', 'checkActiveRole:admin'])->group(function () {
 
     Route::get('/apps/penerima/bantuan/kartu/{UserId}', [PenerimaBantuanKartu::class, 'index'])->name('admin.PenerimaBantuanKartu');
     Route::get('/apps/penerima/bantuan/kartuall', [PenerimaBantuanKartuall::class, 'index'])->name('admin.PenerimaBantuanKartuall');
-    Route::post('/apps/penerima/bantuan/tandaterima', [PenerimaBantuanKartuall::class, 'tandaterima'])->name('TandaTerima');
+    Route::post('/apps/penerima/bantuan/tandaterima', [PenerimaBantuanKartuall::class, 'tandaterima'])->name('admin.TandaTerima');
 
     
 });

@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Filament\Forms\Components\Select;
 use App\Models\Skema;
 use App\Models\WilayahKec;
+use App\Models\UserBantuan;
 
 class ViewDashboard extends Component 
 {
@@ -57,7 +58,9 @@ class ViewDashboard extends Component
                 ->where('periode', $this->periode )
                 ->get();
         
-            $kecamatan = WilayahKec::where('id_induk_wilayah','022100')->get();
-        return view('livewire.apps.period.bank.view-dashboard',['pemenangan' =>$this->pivotData,'kecamatan'=>$kecamatan]);
+            $kecamatan = WilayahKec::where('id_induk_wilayah','022100')->orderby('nm_wil','ASC')->get();
+            $filterIds = UserBantuan::query()->join('bantuan', 'bantuan.id', '=', 'user_bantuan.bantuan_id')
+                ->where('user_id', auth()->user()->id)->get();
+        return view('livewire.apps.period.bank.view-dashboard',['pemenangan' =>$this->pivotData,'kecamatan'=>$kecamatan,'filterIds'=>$filterIds]);
     }
 }

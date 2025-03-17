@@ -10,6 +10,7 @@ use App\Livewire\Apps\Period\Bank\ViewDashboard as ViewDashboard;
 use App\Livewire\Apps\Period\Bank\Pivot as pivotFlaging;
 use App\Livewire\Apps\Penerima\Bantuan\Datalist as PenerimaBantuanDatalist;
 use App\Http\Controllers\Kartuall as PenerimaBantuanKartuall;
+use App\Http\Controllers\Kartu as PenerimaBantuanKartu;
 
 
 // Rute untuk dashboard pendaftar
@@ -23,4 +24,5 @@ Route::middleware(['auth', 'checkActiveRole:unit'])->group(function () {
     Route::get('/apps/period/bank/pivot', pivotFlaging::class)->name('unit.pivotFlaging');
     Route::get('/apps/penerima/bantuan/datalist', PenerimaBantuanDatalist::class)->name('unit.PenerimaBantuanDatalist');
     Route::get('/apps/penerima/bantuan/kartuall', [PenerimaBantuanKartuall::class, 'index'])->name('unit.PenerimaBantuanKartuall');
+    Route::get('/apps/penerima/bantuan/kartu/{UserId}', [PenerimaBantuanKartu::class, 'index'])->name('unit.PenerimaBantuanKartu');
 });

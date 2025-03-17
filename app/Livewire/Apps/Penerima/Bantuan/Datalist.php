@@ -253,6 +253,10 @@ class Datalist extends PowerGridComponent
                     // ->route(session('active_role') . '.UserEdit', ['UserId' => $row->id])
                     ->class('btn btn-xs
                     btn-outline-secondary')->tooltip('Edit Record'),
+                Button::add('barcode')
+                    ->slot("<i class='fas fa-qrcode'></i> ")
+                    ->route(session('active_role') . '.PenerimaBantuanKartu', ['UserId' => $row->uuid])
+                    ->class('btn btn-xs btn-outline-info')->tooltip('Print Barcode'),
             ];
         }elseif(session('active_role')=='teller'){
             return [
