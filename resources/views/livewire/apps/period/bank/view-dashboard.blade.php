@@ -15,6 +15,38 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title
+                        ">Print QR</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route(session('active_role').'.PenerimaBantuanKartukec') }}" method="POST">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="kecamatan_id" class="form-label">Nama Kecamatan</label>
+                                <select name="kecamatan_id" id="kecamatan_id" class="form-select" required>
+                                    <option value="">-- Pilih Kecamatan --</option>
+                                    @foreach ($kecamatan as $item)
+                                        <option value="{{ $item->id_wil }}">{{ $item->nm_wil }}</option>
+                                    @endforeach
+                                </select>
+                                @error('kecamatan_id')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title
                         ">List Skema</h4>
                     </div>
                     <div class="card-body">
@@ -40,6 +72,9 @@
                 </div>
             </div>
         </div>
+
+        
+
         @php
             }
         @endphp

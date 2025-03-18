@@ -25,4 +25,6 @@ Route::middleware(['auth', 'checkActiveRole:unit'])->group(function () {
     Route::get('/apps/penerima/bantuan/datalist', PenerimaBantuanDatalist::class)->name('unit.PenerimaBantuanDatalist');
     Route::get('/apps/penerima/bantuan/kartuall', [PenerimaBantuanKartuall::class, 'index'])->name('unit.PenerimaBantuanKartuall');
     Route::get('/apps/penerima/bantuan/kartu/{UserId}', [PenerimaBantuanKartu::class, 'index'])->name('unit.PenerimaBantuanKartu');
+    Route::post('/apps/penerima/bantuan/kartukec', [PenerimaBantuanKartuall::class, 'indexkec'])->name('unit.PenerimaBantuanKartukec');
+    
 });
