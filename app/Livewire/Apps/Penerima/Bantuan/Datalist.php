@@ -12,6 +12,7 @@ use PowerComponents\LivewirePowerGrid\Exportable;
 use \Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class Datalist extends PowerGridComponent
 {
@@ -35,6 +36,8 @@ class Datalist extends PowerGridComponent
          ->select(
              // Semua kolom dari tabel users
             '*', // Semua kolom dari tabel students
+            DB::raw("CONCAT(\"'\", pemenangan.no_rekening) as no_rekening"),
+            DB::raw("CONCAT(\"'\", profiles.nik) as nik"),
             'pemenangan.id as uuid'
         );
 
@@ -120,6 +123,9 @@ class Datalist extends PowerGridComponent
             Filter::inputText('nama_lengkap')->operators(['contains']),
             Filter::inputText('tempat_lahir')->operators(['contains']),
             Filter::inputText('nm_wil')->operators(['contains']),
+            Filter::inputText('tanggal_verif_teller')->operators(['contains']),
+            Filter::inputText('verif_teller')->operators(['contains']),
+
         ];
     }
 

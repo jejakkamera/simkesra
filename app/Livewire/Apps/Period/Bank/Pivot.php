@@ -35,7 +35,7 @@ class Pivot extends Component
             ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') // Join dengan tabel departments
             ->select(
                 'pemenangan.id as uuid',
-                'pemenangan.no_rekening',
+                DB::raw("CONCAT(\"'\", pemenangan.no_rekening) as no_rekening"),
                 'pemenangan.jenis_rekening',
                 'pemenangan.tipe_rekening',
                 'pemenangan.id_verif_teller',
@@ -44,7 +44,7 @@ class Pivot extends Component
                 'periods.name_period',
                 'profiles.tempat_mengajar',
                 'profiles.nama_lengkap',
-                'profiles.nik',
+                DB::raw("CONCAT(\"'\", profiles.nik) as nik"),
                 'profiles.desa',
                 'wilayah_kec.nm_wil',
                 'bantuan.judul',
