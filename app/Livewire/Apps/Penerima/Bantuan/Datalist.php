@@ -193,6 +193,9 @@ class Datalist extends PowerGridComponent
             Column::make('Pencairan', 'verif_teller')
                 ->searchable()
                 ->sortable(),
+            Column::make('Teller', 'id_verif_teller')
+                ->searchable()
+                ->sortable(),
             Column::make('Tanggal Pencairan', 'tanggal_verif_teller')
                 ->searchable()
                 ->sortable(),
