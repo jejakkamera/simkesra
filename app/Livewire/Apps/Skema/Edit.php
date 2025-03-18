@@ -94,8 +94,7 @@ class Edit extends Component implements HasForms
                         TextInput::make('wilayah')
                             ->name('wilayah')
                             ->label('Wilayah')
-                            ->extraAttributes(['class' => 'form-control'])
-                            ->required(),
+                            ->extraAttributes(['class' => 'form-control']),
                         Select::make('is_active')->label('Status')
                             ->options(['1' => 'Open', '0' => 'Close'])
 
