@@ -107,7 +107,6 @@ class Kartuall extends Controller
 
         // Ambil hasil query
         $this->profile = $pivotQuery->get();
-        $this->profile = $pivotQuery->get();
         return view('livewire.apps.penerima.bantuan.kartu',[
             'profiles' => $this->profile
         ]);
