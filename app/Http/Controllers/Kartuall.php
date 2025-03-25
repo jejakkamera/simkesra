@@ -23,7 +23,7 @@ class Kartuall extends Controller
     public function tandaterima(Request $request)
     {   
         $validated = $request->validate([
-            'kecamatan_id' => 'required|exists:wilayah_kec,id_wil',
+            'kecamatan_id' => 'required',
             'status_cetak' => 'required',
         ]);
 
