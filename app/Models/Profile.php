@@ -13,6 +13,10 @@ class Profile extends Model
 
     // Nama tabel (opsional, jika berbeda dari plural default)
     protected $table = 'profiles';
+    protected $primaryKey = 'id'; // ini default, tapi bisa eksplisit
+    public $incrementing = false; // karena pakai UUID
+    protected $keyType = 'string'; // UUID adalah string
+
 
     protected $fillable = [
         'id',

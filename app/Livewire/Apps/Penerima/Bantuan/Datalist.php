@@ -13,7 +13,7 @@ use \Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+ini_set('memory_limit', '2048M');
 class Datalist extends PowerGridComponent
 {
     

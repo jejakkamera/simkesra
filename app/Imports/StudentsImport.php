@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+ini_set('memory_limit', '2048M');
 class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     /**
@@ -38,7 +38,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 
     public function model(array $row)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
         
         // try {
             if (!empty($row['nik']) && !is_null($row['nama_lengkap']) && !is_null($row['nama_ibu_kandung']) &&  !is_null($row['kecamatan'])) {
@@ -112,7 +112,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                         'status' => $status,
                         'note' => $note ,
                     ]);
-                    DB::commit();
+                    // DB::commit();
                     
                     return $profile;
                 } else {    
@@ -136,7 +136,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                 //     return null;
                 // }
             } else {
-                DB::rollBack();
+                // DB::rollBack();
                 // Buat log dengan status failed jika data tidak lengkap
                 ExcelImportLogDetail::create([
                     'import_log_id' => $this->importLog,
