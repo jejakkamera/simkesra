@@ -24,34 +24,73 @@ class Kartuall extends Controller
     {   
         $validated = $request->validate([
             'kecamatan_id' => 'required|exists:wilayah_kec,id_wil',
+            'status_cetak' => 'required',
         ]);
 
         // Ambil datanya
         $kecamatanId = $validated['kecamatan_id'];
+        $statusCetak = $validated['status_cetak'];
+
         $this->uuid = request()->query('UserId');
+
         $pivotQuery = Pemenangan::query()
-                ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
-                ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
-                ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') 
-                ->where('wilayah_kec.id_wil', $kecamatanId)
-                ->orderBy('profiles.desa','ASC')
-                ->orderBy('bantuan.judul','ASC') // lalu urut bantuan
-                ->orderBy('profiles.nama_lengkap','ASC') // lalu urut nama
-                ->select(
-                    'pemenangan.*',
-                    'profiles.nama_lengkap',
-                    'profiles.nik',
-                    'profiles.tempat_mengajar',
-                    'profiles.desa',
-                    'profiles.alamat',
-                    'wilayah_kec.nm_wil',
-                    'bantuan.judul as bantuan_judul',
-                    'bantuan.nominal as bantuan_nominal',
-                    'bantuan.wilayah as bantuan_wilayah',
-                    'pemenangan.id as uuid'
-                )
-                ->get()
-                ->groupBy('desa'); 
+        ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
+        ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
+        ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan');
+
+    // Filter kecamatan jika tidak memilih "all"
+    if ($kecamatanId !== 'all') {
+        $pivotQuery->where('wilayah_kec.id_wil', $kecamatanId);
+    }
+
+    // Filter status_cetak jika tidak memilih "all"
+    if ($statusCetak !== 'all') {
+        $pivotQuery->where('pemenangan.status_cetak', $statusCetak == 1 ? 'Selesai' : '-');
+    }
+
+    $pivotQuery = $pivotQuery
+        ->orderBy('profiles.desa', 'ASC')
+        ->orderBy('bantuan.judul', 'ASC')
+        ->orderBy('profiles.nama_lengkap', 'ASC')
+        ->select(
+            'pemenangan.*',
+            'profiles.nama_lengkap',
+            'profiles.nik',
+            'profiles.tempat_mengajar',
+            'profiles.desa',
+            'profiles.alamat',
+            'wilayah_kec.nm_wil',
+            'bantuan.judul as bantuan_judul',
+            'bantuan.nominal as bantuan_nominal',
+            'bantuan.wilayah as bantuan_wilayah',
+            'pemenangan.id as uuid'
+        )
+        ->get()
+        ->groupBy('desa');
+
+        // $pivotQuery = Pemenangan::query()
+        //         ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
+        //         ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
+        //         ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') 
+        //         ->where('wilayah_kec.id_wil', $kecamatanId)
+        //         ->orderBy('profiles.desa','ASC')
+        //         ->orderBy('bantuan.judul','ASC') // lalu urut bantuan
+        //         ->orderBy('profiles.nama_lengkap','ASC') // lalu urut nama
+        //         ->select(
+        //             'pemenangan.*',
+        //             'profiles.nama_lengkap',
+        //             'profiles.nik',
+        //             'profiles.tempat_mengajar',
+        //             'profiles.desa',
+        //             'profiles.alamat',
+        //             'wilayah_kec.nm_wil',
+        //             'bantuan.judul as bantuan_judul',
+        //             'bantuan.nominal as bantuan_nominal',
+        //             'bantuan.wilayah as bantuan_wilayah',
+        //             'pemenangan.id as uuid'
+        //         )
+        //         ->get()
+        //         ->groupBy('desa'); 
 
             return view('livewire.apps.penerima.bantuan.beritaacara',compact('pivotQuery'));
             
