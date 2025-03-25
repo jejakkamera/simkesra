@@ -92,7 +92,7 @@ class Kartuall extends Controller
 
         // Filter status cetak jika tidak memilih "all"
         if ($statusCetak !== 'all') {
-            $pivotQuery->where('pemenangan.status_cetak', $statusCetak === 'sudah' ? 'Selesai' : '-');
+            $pivotQuery->where('pemenangan.verif_teller', $statusCetak === 'sudah' ? 'Selesai' : '-');
         }
 
         // Filter berdasarkan role "unit"
