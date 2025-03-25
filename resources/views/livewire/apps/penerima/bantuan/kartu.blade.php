@@ -105,7 +105,7 @@
 
 
 </div>
-<hr style="page-break-before: always;">
+{{-- <hr style="page-break-before: always;"> --}}
 @endforeach
 <script>
     window.print()
