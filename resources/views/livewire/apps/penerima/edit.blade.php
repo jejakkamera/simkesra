@@ -1,4 +1,4 @@
-<div>
+<div wire:ignore.self>
     <div class="row">
 
         <div class="col-md-6">
@@ -18,7 +18,9 @@
                     </div>
                     @endif
     
-                    <form id="formbiodata" wire:submit="save" method="POST" enctype="multipart/form-data">
+                    {{-- <form id="formbiodata" wire:submit="save" method="POST" enctype="multipart/form-data"> --}}
+                        <form id="formbiodata" wire:submit.prevent="save">
+
                         @csrf
                     <div class="row">
                         <div class="col-md-12 mb-3">
@@ -56,14 +58,37 @@
                                       value="{{ old('alamat',$pemenangan->alamat) }}" required>
                             </div>
                         </div>
+                        
                         <div class="col-md-6 mb-3">
-                            <div>
-                                <label for="nik">Desa<span class="text-danger">*</span> </label>
-                                <input type="text" class="form-control" id="desa" wire:model="desa"
-                                      value="{{ old('desa',$pemenangan->desa) }}" required>
-                            </div>
+                            <label for="id_kec">Kecamatan <span class="text-danger">*</span></label>
+                            <select class="form-select" id="id_kec"
+                                    wire:model.lazy="id_kec"
+                                    wire:change="$refresh"
+                                    required>
+                                <option value="">-- Pilih Kecamatan --</option>
+                                @foreach ($kecamatans as $kec)
+                                    <option value="{{ $kec->id_wil }}">{{ $kec->nm_wil }}</option>
+                                @endforeach
+                            </select>
+
                         </div>
-                     
+
+                        <div class="col-md-6 mb-3">
+                            <label for="id_kelurahan">Desa / Kelurahan <span class="text-danger">*</span></label>
+                            <select class="form-select" 
+                                    id="id_kelurahan" 
+                                    wire:model="id_kelurahan"
+                                    wire:key="desa-{{ $id_kec }}"
+                                    required
+                                    {{ empty($kelurahans) ? 'disabled' : '' }}>
+                                <option value="">-- Pilih Desa/Kelurahan --</option>
+                                @foreach ($kelurahans as $kel)
+                                    <option value="{{ $kel->id_kelurahan }}">{{ $kel->kemendagri_kelurahan_nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <div class="col-md-6 mb-3">
                             <div>
                                 <label for="nik">Nama Ibu<span class="text-danger">*</span> </label>

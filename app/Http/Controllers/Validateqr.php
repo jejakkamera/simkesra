@@ -74,7 +74,7 @@ class Validateqr extends Controller
 
                 // Simpan perubahan ke Profile
                 $profile->save();
-                session()->flash('message', 'Berhasil divalidasi penyaluran kepadar : '.$profile->nama_lengkap);
+                session()->flash('message', 'Berhasil divalidasi penyaluran kepada : '.$profile->nama_lengkap);
                 return redirect()->route(session('active_role') . '.PeriodScanQrcode', ['periode' => $model->periode]);
 
      

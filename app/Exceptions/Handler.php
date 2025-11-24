@@ -34,6 +34,15 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof \Illuminate\Http\Exceptions\ThrottleRequestsException) {
+            return response()->view('error_429', [], 429);
+        }
+
+        return parent::render($request, $exception);
+    }
+
     // public function render($request, Throwable $exception)
     // {
     //     // Tangani hanya error 500

@@ -42,11 +42,17 @@ Route::get('lang/{locale}', [LanguageController::class, 'swap']);
 
 // pages
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
+Route::get('/error/429', function () {
+    $minutes = request('wait', 15);
+    return response()->view('error_429', [], 429);
+})->name('error.429');
 
 // authentication
-Route::get('/', LoginBasic::class)->middleware('role.redirect');
-Route::get('/login', LoginBasic::class)->middleware('role.redirect');
-Route::get('/auth/login-basic', LoginBasic::class)->name('auth-login-basic')->middleware('role.redirect');
+Route::get('/', LoginBasic::class)->middleware(['role.redirect', 'throttle:30,15']);
+Route::get('/login', LoginBasic::class)->middleware(['role.redirect', 'throttle:30,15']);
+Route::get('/auth/login-basic', LoginBasic::class)
+    ->name('auth-login-basic')
+    ->middleware(['role.redirect', 'throttle:30,15']);
 // Route::get('/auth/register-basic', RegisterBasic::class)->name('auth-register-basic');
 Route::get('/auth/forgot-password', ForgotPassword::class)->name('password.request');
 Route::get('/auth/forgot-password-verif/{user}/{token}', [ForgotPasswordVerif::class, 'verifyResetPassword'])->name('password.request-verif');

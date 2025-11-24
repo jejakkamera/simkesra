@@ -63,6 +63,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/unit.php'));
 
+            Route::middleware('web')
+                ->prefix('validator')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/validator.php'));
+
         });
     }
 }

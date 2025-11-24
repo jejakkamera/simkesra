@@ -1,0 +1,56 @@
+{
+  "menu": [
+    {
+      "url": "/kesra/dashboard",
+      "name": "Home",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "pages-home"
+    },
+    {
+      "name": "Apps",
+      "icon": "menu-icon tf-icons ti ti-cloud-cog",
+      "slug": "Config",
+      "submenu": [
+        {
+          "url": "kesra/apps/information",
+          "name": "Apps",
+          "slug": "Config"
+        },
+        {
+          "url": "kesra/apps/dashboard/information/datalist",
+          "name": "Dashboard Information",
+          "slug": "Config"
+        },
+        {
+          "url": "kesra/apps/period/datalist",
+          "name": "Periode",
+          "slug": "Config"
+        },
+        {
+          "url": "kesra/apps/skema/datalist",
+          "name": "Skema",
+          "slug": "Config"
+        },
+        {
+          "url": "kesra/apps/penerima/datalist",
+          "name": "Profile Penerima",
+          "slug": "Config"
+        }
+      ]
+    },
+   
+    {
+      "name": "Penerima",
+      "icon": "menu-icon tf-icons ti ti-building-bank",
+      "slug": "penerima",
+      "submenu": [
+        {
+          "url": "/kesra/apps/period/bank/datalist",
+          "name": "Periode",
+          "slug": "penerima"
+        }
+      ]
+    }
+ 
+  ]
+}

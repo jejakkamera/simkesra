@@ -1,5 +1,6 @@
 @php
 $menuCollapsed = ($configData['menuCollapsed'] === 'layout-menu-collapsed') ? json_encode(true) : false;
+$rtlPath = ($configData['rtlSupport'] === '/rtl') ? '/rtl' : '';
 @endphp
 <!-- laravel style -->
 @vite(['resources/assets/vendor/js/helpers.js'])
@@ -26,14 +27,14 @@ $menuCollapsed = ($configData['menuCollapsed'] === 'layout-menu-collapsed') ? js
       var resolvedPaths = {
         // Core stylesheets
         @foreach (['core'] as $name)
-          '{{ $name }}.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$configData["rtlSupport"].'/'.$name.'.scss') }}',
-          '{{ $name }}-dark.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$configData["rtlSupport"].'/'.$name.'-dark.scss') }}',
+          '{{ $name }}.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$rtlPath.'/'.$name.'.scss') }}',
+          '{{ $name }}-dark.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$rtlPath.'/'.$name.'-dark.scss') }}',
         @endforeach
 
         // Themes
         @foreach (['default', 'bordered', 'semi-dark'] as $name)
-          'theme-{{ $name }}.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$configData["rtlSupport"].'/theme-'.$name.'.scss') }}',
-          'theme-{{ $name }}-dark.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$configData["rtlSupport"].'/theme-'.$name.'-dark.scss') }}',
+          'theme-{{ $name }}.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$rtlPath.'/theme-'.$name.'.scss') }}',
+          'theme-{{ $name }}-dark.scss': '{{ Vite::asset('resources/assets/vendor/scss'.$rtlPath.'/theme-'.$name.'-dark.scss') }}',
         @endforeach
       }
       return resolvedPaths[path] || path;

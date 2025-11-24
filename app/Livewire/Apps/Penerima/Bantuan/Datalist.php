@@ -13,7 +13,11 @@ use \Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-ini_set('memory_limit', '2048M');
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Collection;
+
+ini_set('max_execution_time', 300); // dalam detik, contoh: 300 = 5 menit
+ini_set('memory_limit', '4096M');   // jika RAM juga jadi masalah
 class Datalist extends PowerGridComponent
 {
     
@@ -22,6 +26,50 @@ class Datalist extends PowerGridComponent
     public string $tableName = 'penerimabantuan';
     public string $sortDirection = 'desc';
     public $Period;
+
+    public function fields(): PowerGridFields
+    {
+        $options = $this->statusOptions();
+      
+        return PowerGrid::fields()
+            ->add('uuid')
+            ->add('nik')
+            ->add('nama_lengkap')
+            ->add('status_ajuan', function ($row) use ($options) {
+                // Ambil nilai dari database
+                $selected = $row->status_ajuan ?? 'diajukan'; // default kalau null
+                // dd($selected);
+                return Blade::render(
+                    '<x-select-status :options="$options" :rowId="$id" :selected="$selected" />',
+                    [
+                        'options' => $options,
+                        'id' => $row->uuid,
+                        'selected' => $selected,
+                    ]
+                );
+            });
+    }
+
+    public function statusOptions(): Collection
+    {
+        return collect([
+            'Diajukan' => '🕒 Diajukan',
+            'Disetujui' => '✅ Disetujui',
+            'Ditolak' => '❌ Ditolak',
+        ]);
+    }
+
+    #[On('statusChanged')]
+    public function statusChanged($status, $id): void
+    {
+        Pemenangan::where('id', $id)->update(['status' => $status]);
+
+        $this->dispatch('$refresh'); // 🔁 ini penting supaya tabel reload dari DB
+
+        session()->flash('message', 'Status berhasil diperbarui');
+    }
+
+
 
     public function datasource(): Builder
     {
@@ -38,7 +86,8 @@ class Datalist extends PowerGridComponent
             '*', // Semua kolom dari tabel students
             DB::raw("CONCAT(\"'\", pemenangan.no_rekening) as no_rekening"),
             DB::raw("CONCAT(\"'\", profiles.nik) as nik"),
-            'pemenangan.id as uuid'
+            'pemenangan.id as uuid',
+            'pemenangan.status as status_ajuan',
         );
 
     if ($this->Period) {
@@ -95,7 +144,7 @@ class Datalist extends PowerGridComponent
     #[On('CetakPemenang')]
     public function CetakPemenang()
     {
-        $this->redirectRoute(session('active_role') . '.PenerimaBantuanKartuall', []);
+        $this->redirectRoute(session('active_role') . '.PenerimaBantuanKartuall', ['periode' => $this->Period]);
     }
 
     public function setUp(): array
@@ -117,7 +166,7 @@ class Datalist extends PowerGridComponent
     }
 
     public function filters(): array
-    {  
+    {
         return [
             Filter::inputText('nik')->operators(['contains']),
             Filter::inputText('nama_lengkap')->operators(['contains']),
@@ -126,13 +175,28 @@ class Datalist extends PowerGridComponent
             Filter::inputText('tanggal_verif_teller')->operators(['contains']),
             Filter::inputText('verif_teller')->operators(['contains']),
 
+            // 👇 Tambahan baru
+            Filter::select('status_ajuan', 'pemenangan.status')
+            ->dataSource([
+                ['key' => 'diajukan', 'value' => '🕒 Diajukan'],
+                ['key' => 'disetujui', 'value' => '✅ Disetujui'],
+                ['key' => 'ditolak', 'value' => '❌ Ditolak'],
+            ])
+            ->optionLabel('value')
+            ->optionValue('key')
+            ->builder(function (Builder $query, $value) {
+                return $query->where('pemenangan.status', '=', $value);
+            }),
         ];
     }
+
 
     public function columns(): array
     {
         return [
-            
+            Column::make('Status Ajuan', 'status_ajuan')
+                ->sortable()
+                ->searchable(),
             Column::make('UUID', 'uuid')
                 ->searchable()
                 ->sortable(),
@@ -213,6 +277,9 @@ class Datalist extends PowerGridComponent
 
     public function actions(Pemenangan $row): array
     {
+         if (strtolower($row->status_ajuan) !== 'disetujui') {
+            return [];
+        }
         if(session('active_role')=='admin'){
             return [
                 Button::add('profile')

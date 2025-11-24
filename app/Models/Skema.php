@@ -27,4 +27,10 @@ class Skema extends Model
                     ->withTimestamps();
     }
 
+    public function kelurahans()
+    {
+        return $this->belongsToMany(Kelurahan::class, 'bantuan_kelurahan', 'bantuan_id', 'kelurahan_id')
+                    ->withTimestamps();
+    }
+
 }

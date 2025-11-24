@@ -35,6 +35,7 @@ class Profile extends Model
         'Alamat_mengajar',
         'fotoktp',
         'fotodiri',
+        'id_kelurahan'
     ];
 
     public function kecamatan(){

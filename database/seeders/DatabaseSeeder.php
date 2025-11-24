@@ -13,10 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['admin', 'kesra', 'unit', 'bank', 'teller','user'];
+        $roles = ['admin', 'kesra', 'unit', 'bank', 'teller', 'user', 'validator'];
 
         foreach ($roles as $role) {
-            \Spatie\Permission\Models\Role::create(['name' => $role]);
+            \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role]);
         }
 
         // \App\Models\User::factory(10)->create();
@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             SchoolTypesTableSeeder::class, // Tambahkan seeder di sini
             BantuanSeeder::class, // Tambahkan seeder di sini
             Wil::class, // Tambahkan seeder di sini
+            KelurahanSeeder::class, // Tambahkan seeder di sini
         ]);
     }
 }

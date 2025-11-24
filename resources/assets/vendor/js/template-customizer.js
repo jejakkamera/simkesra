@@ -522,6 +522,9 @@ class TemplateCustomizer {
 
   // Setup theme settings controls and events
   _setup(_container = document) {
+    // Get assets path from data attribute
+    const assetsPath = document.documentElement.getAttribute('data-assets-path') || '/assets/'
+    
     // Function to create customizer elements
     const createOptionElement = (nameVal, title, inputName, isDarkStyle, image) => {
       image = image || nameVal
@@ -706,7 +709,7 @@ class TemplateCustomizer {
 
       // Header Layout Type
       const headerTypeW = this.container.querySelector('.template-customizer-headerOptions')
-      const templateName = document.documentElement.getAttribute('data-template').split('-')
+      const templateName = (document.documentElement.getAttribute('data-template') || '').split('-')
       if (!this._hasControls('headerType')) {
         headerTypeW.parentNode.removeChild(headerTypeW)
       } else {

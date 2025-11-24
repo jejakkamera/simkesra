@@ -27,4 +27,6 @@ class Period extends Model
     {
         return $query->where('is_active', true);
     }
+
+    
 }

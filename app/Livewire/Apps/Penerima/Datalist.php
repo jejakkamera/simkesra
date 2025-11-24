@@ -25,6 +25,7 @@ class Datalist extends PowerGridComponent
     {
         $query = Profile::query()
         ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan') // Join dengan tabel departments
+        ->join('kelurahans', 'kelurahans.id_kelurahan', '=', 'profiles.id_kelurahan') // Join dengan tabel departments
         ->select(
             '*','profiles.id as userid' // Semua kolom 
         );
@@ -62,6 +63,8 @@ class Datalist extends PowerGridComponent
         return [
             Filter::inputText('nama_lengkap')->operators(['contains']),
             Filter::inputText('nik')->operators(['contains']),
+            Filter::inputText('kemendagri_kelurahan_nama')->operators(['contains']),
+            Filter::inputText('nm_wil')->operators(['contains']),
         ];
     }
 
@@ -78,7 +81,7 @@ class Datalist extends PowerGridComponent
                 ->searchable(),
             Column::make('Alamat', 'alamat') // Using the custom accessor
                 ->searchable(),
-            Column::make('Desa', 'desa') // Using the custom accessor
+            Column::make('Desa', 'kemendagri_kelurahan_nama') // Using the custom accessor
                 ->searchable(),
             Column::make('Kecamatan', 'nm_wil') // Using the custom accessor
                 ->searchable(),

@@ -15,5 +15,21 @@ class UserBantuan extends Model
     protected $fillable = [
         'user_id',
         'bantuan_id',
+        'bantuan_kelurahan_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function bantuan()
+    {
+        return $this->belongsTo(Bantuan::class, 'bantuan_id');
+    }
+
+    public function bantuanKelurahan()
+    {
+        return $this->belongsTo(BantuanKelurahan::class, 'bantuan_kelurahan_id');
+    }
 }

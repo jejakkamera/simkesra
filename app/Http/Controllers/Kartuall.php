@@ -24,35 +24,41 @@ class Kartuall extends Controller
     {   
         $validated = $request->validate([
             'kecamatan_id' => 'required|exists:wilayah_kec,id_wil',
+            'periode' => 'nullable|integer',
         ]);
+
+        $this->periode = $request->input('periode') ?? $request->query('periode');
 
         // Ambil datanya
         $kecamatanId = $validated['kecamatan_id'];
         $this->uuid = request()->query('UserId');
         $pivotQuery = Pemenangan::query()
-                ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
-                ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
-                ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') 
-                ->where('wilayah_kec.id_wil', $kecamatanId)
-                ->orderBy('profiles.desa','ASC')
-                ->orderBy('bantuan.judul','ASC') // lalu urut bantuan
-                ->orderBy('profiles.nama_lengkap','ASC') // lalu urut nama
-                ->select(
-                    'pemenangan.*',
-                    'profiles.nama_lengkap',
-                    'profiles.nik',
-                    'profiles.tempat_mengajar',
-                    'profiles.desa',
-                    'profiles.alamat',
-                    'wilayah_kec.nm_wil',
-                    'bantuan.judul as bantuan_judul',
-                    'bantuan.nominal as bantuan_nominal',
-                    'bantuan.wilayah as bantuan_wilayah',
-                    'pemenangan.id as uuid'
-                )
-                ->get()
-                ->groupBy('desa'); 
-
+            ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
+            ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
+            ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan')
+            ->where('wilayah_kec.id_wil', $kecamatanId)
+            ->when($this->periode, function ($q) {
+                $q->where('pemenangan.periode', $this->periode);
+            })
+            ->orderBy('profiles.desa', 'ASC')
+            ->orderBy('bantuan.judul', 'ASC')
+            ->orderBy('profiles.nama_lengkap', 'ASC')
+            ->select(
+                'pemenangan.*',
+                'profiles.nama_lengkap',
+                'profiles.nik',
+                'profiles.tempat_mengajar',
+                'profiles.desa',
+                'profiles.alamat',
+                'wilayah_kec.nm_wil',
+                'bantuan.judul as bantuan_judul',
+                'bantuan.nominal as bantuan_nominal',
+                'bantuan.wilayah as bantuan_wilayah',
+                'pemenangan.id as uuid'
+            )
+            ->get()
+            ->groupBy('desa');
+                // dd($pivotQuery);
             return view('livewire.apps.penerima.bantuan.beritaacara',compact('pivotQuery'));
             
     }
@@ -112,9 +118,15 @@ class Kartuall extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {   
         $this->uuid = request()->query('UserId');
+        $validated = $request->validate([
+            'periode' => 'nullable|integer',
+        ]);
+        
+        $periode = $request->input('periode') ?? $request->query('periode');
+
         $pivotQuery = Pemenangan::query()
             ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
             ->join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
@@ -130,7 +142,9 @@ class Kartuall extends Controller
                 'bantuan.nominal as bantuan_nominal',
                 'bantuan.wilayah as bantuan_wilayah',
                 'pemenangan.id as uuid'
-            );
+            )
+            ->where('pemenangan.periode', $periode)
+            ->where('pemenangan.status', 'Disetujui');
         
         // $pivotQuery = Pemenangan::join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')->
         //                         join('wilayah_kec', 'profiles.kode_kecamatan', '=', 'wilayah_kec.id_wil')
@@ -146,6 +160,7 @@ class Kartuall extends Controller
                 $pivotQuery->whereIn('bantuan.id', $filterIds);
         } 
         $this->profile = $pivotQuery->get();
+        // dd($this->profile);
         return view('livewire.apps.penerima.bantuan.kartu',[
             'profiles' => $this->profile
         ]);

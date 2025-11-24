@@ -64,7 +64,7 @@
                     <div class="card-body">
                         <form action="{{ route(session('active_role').'.TandaTerima') }}" method="POST">
                         @csrf
-
+                        <input type="hidden" name="periode" value="{{ request()->query('periode') }}">
                         <div class="mb-3">
                             <label for="kecamatan_id" class="form-label">Nama Kecamatan</label>
                             <select name="kecamatan_id" id="kecamatan_id" class="form-select" required>

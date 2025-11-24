@@ -30,7 +30,7 @@ class Pivot extends Component
 
         $pivotQuery = Pemenangan::query()
             ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id') // Join dengan tabel departments
-                ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan') // Join dengan tabel departments       
+            ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan') // Join dengan tabel departments       
             ->join('periods', 'periods.id', '=', 'pemenangan.periode') // Join dengan tabel departments
             ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') // Join dengan tabel departments
             ->select(
@@ -51,7 +51,8 @@ class Pivot extends Component
                 'bantuan.nominal',
                 'bantuan.wilayah',
             )
-            ->where('periode', $this->periode );
+            ->where('periode', $this->periode )
+            ->where('pemenangan.status', 'Disetujui');
 
         if(session('active_role')=='unit'){
             $filterIds = UserBantuan::query()
