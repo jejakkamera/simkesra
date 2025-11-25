@@ -74,7 +74,6 @@ class Logs extends Component
     {
         $page = $this->page ?? 1;
         $items = collect($this->allLogs);
-        $total = $items->count();
         $perPage = $this->perPage;
         $offset = ($page - 1) * $perPage;
         
@@ -89,6 +88,11 @@ class Logs extends Component
                 'query' => request()->query(),
             ]
         );
+    }
+
+    public function getTotalLogsProperty()
+    {
+        return count($this->allLogs);
     }
 
     public function filterByLevel($level)

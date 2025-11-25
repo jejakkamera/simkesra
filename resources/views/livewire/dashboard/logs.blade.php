@@ -87,11 +87,11 @@
         {{-- ========================================= --}}
         {{-- 📋 LOGS TABLE --}}
         {{-- ========================================= --}}
-        @if ($logs->total() > 0)
+        @if ($totalLogs > 0)
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-light border-bottom">
                     <h6 class="mb-0 fw-bold">
-                        <i class="fas fa-list me-2"></i> Total Logs: {{ $logs->total() }}
+                        <i class="fas fa-list me-2"></i> Total Logs: {{ $totalLogs }}
                     </h6>
                 </div>
                 <div class="card-body p-0">
@@ -205,7 +205,7 @@
                         <div class="col-md-6">
                             <small class="text-muted">
                                 Showing {{ $logs->firstItem() ?? 0 }} to {{ $logs->lastItem() ?? 0 }} 
-                                of {{ $logs->total() }} results
+                                of {{ $totalLogs }} results
                             </small>
                         </div>
                         <div class="col-md-6 text-md-end">
