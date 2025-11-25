@@ -20,8 +20,8 @@ return [
     'directives' => [
         [Directive::BASE, [Keyword::SELF]],
         [Directive::DEFAULT, [Keyword::SELF]],
-        [Directive::SCRIPT, [Keyword::SELF, Keyword::UNSAFE_INLINE, Keyword::UNSAFE_EVAL, 'https://www.google.com', 'https://www.gstatic.com', 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net']],
-        [Directive::STYLE, [Keyword::SELF, Keyword::UNSAFE_INLINE, 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com']],
+        [Directive::SCRIPT, [Keyword::SELF, Keyword::UNSAFE_INLINE, Keyword::UNSAFE_EVAL, 'https://www.google.com', 'https://www.gstatic.com', 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://maxcdn.bootstrapcdn.com', 'https://cdn.datatables.net']],
+        [Directive::STYLE, [Keyword::SELF, Keyword::UNSAFE_INLINE, 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com', 'https://maxcdn.bootstrapcdn.com', 'https://cdn.datatables.net']],
         [Directive::IMG, [Keyword::SELF, 'data:', 'https:']],
         [Directive::FONT, [Keyword::SELF, 'https://fonts.gstatic.com']],
         [Directive::CONNECT, [Keyword::SELF, 'https://www.google.com', 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net']],
