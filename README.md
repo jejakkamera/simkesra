@@ -403,6 +403,61 @@ php artisan queue:work
 # Atau gunakan supervisor untuk production
 ```
 
+## 🔍 Error Monitoring (Production)
+
+Aplikasi dilengkapi dengan **Log Viewer** untuk monitoring error langsung dari web tanpa perlu akses ke server file.
+
+### Akses Log Viewer
+
+URL: `https://your-app.com/logs`
+
+**Persyaratan**:
+- User harus login
+- User harus memiliki role **Admin**
+
+### Fitur Log Viewer
+
+- ✅ Lihat semua error log real-time
+- ✅ Filter log berdasarkan tanggal dan level (error, warning, notice)
+- ✅ Download dan delete log file
+- ✅ Search dalam log message
+- ✅ Stack trace lengkap untuk debugging
+
+### Konfigurasi Environment
+
+**Production (.env)**:
+```
+APP_DEBUG=false          # Jangan aktifkan debug mode di production
+APP_ENV=production
+LOG_LEVEL=error          # Log hanya error messages
+LOG_CHANNEL=stack        # Menggunakan stack logging
+```
+
+**Development (.env)**:
+```
+APP_DEBUG=true
+APP_ENV=local
+LOG_LEVEL=debug          # Log semua messages untuk development
+```
+
+### Troubleshooting Error Log
+
+1. **"SQLSTATE[HY000]"** - Database connection error
+   - Cek DB_HOST, DB_USERNAME, DB_PASSWORD di .env
+   - Pastikan database sudah berjalan
+
+2. **"View not found"** - Template/view tidak ditemukan
+   - Cek file exists di `resources/views/`
+   - Cek route mana yang error
+
+3. **"Class not found"** - Class/namespace tidak ditemukan
+   - Run `composer dump-autoload`
+   - Cek namespace dan use statement
+
+4. **Logs folder penuh**
+   - Clear logs: `php artisan log:clear`
+   - Atau di log viewer, click "Delete" button
+
 ## 📚 Dokumentasi Tambahan
 
 - [Laravel Documentation](https://laravel.com/docs)
@@ -436,3 +491,4 @@ Untuk bantuan atau pertanyaan:
 **Last Updated**: November 25, 2025  
 **Version**: 1.0.0  
 **Maintainer**: TA Karawang Cerdas 2023
+

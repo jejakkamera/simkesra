@@ -73,3 +73,11 @@ Route::get('/force-error', function () {
     // Paksa terjadinya error 500
     throw new HttpException(500, 'This is a forced 500 error.');
 });
+
+// ===== LOG VIEWER - PRODUCTION ERROR MONITORING =====
+// Route untuk melihat error log dari web UI
+// Protected dengan middleware auth dan role 'admin'
+Route::middleware(['auth', 'role:admin'])->prefix('logs')->group(function () {
+    Route::get('/', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs.view');
+});
+
