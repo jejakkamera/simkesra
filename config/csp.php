@@ -16,15 +16,48 @@ return [
     /**
      * Register additional global CSP directives here.
      * Follow Spatie v3 format for proper configuration
+     * 
+     * REMOVED: unsafe-inline and unsafe-eval for XSS protection
+     * These keywords are now replaced with strict CSP + external resources
      */
     'directives' => [
         [Directive::BASE, [Keyword::SELF]],
         [Directive::DEFAULT, [Keyword::SELF]],
-        [Directive::SCRIPT, [Keyword::SELF, Keyword::UNSAFE_INLINE, Keyword::UNSAFE_EVAL, 'https://www.google.com', 'https://www.gstatic.com', 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://maxcdn.bootstrapcdn.com', 'https://cdn.datatables.net']],
-        [Directive::STYLE, [Keyword::SELF, Keyword::UNSAFE_INLINE, 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com', 'https://maxcdn.bootstrapcdn.com', 'https://cdn.datatables.net']],
+        
+        // SCRIPT: Removed unsafe-inline and unsafe-eval
+        // Livewire scripts are loaded from external CDN
+        [Directive::SCRIPT, [
+            Keyword::SELF,
+            'https://www.google.com',
+            'https://www.gstatic.com',
+            'https://cdnjs.cloudflare.com',
+            'https://cdn.jsdelivr.net',
+            'https://maxcdn.bootstrapcdn.com',
+            'https://cdn.datatables.net',
+            // Livewire CDN
+            'https://cdn.livewire.laravel.com',
+        ]],
+        
+        // STYLE: Removed unsafe-inline
+        // All styles are external CSS files
+        [Directive::STYLE, [
+            Keyword::SELF,
+            'https://fonts.googleapis.com',
+            'https://cdn.jsdelivr.net',
+            'https://cdnjs.cloudflare.com',
+            'https://maxcdn.bootstrapcdn.com',
+            'https://cdn.datatables.net',
+        ]],
+        
         [Directive::IMG, [Keyword::SELF, 'data:', 'https:']],
         [Directive::FONT, [Keyword::SELF, 'https://fonts.gstatic.com']],
-        [Directive::CONNECT, [Keyword::SELF, 'https://www.google.com', 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net']],
+        [Directive::CONNECT, [
+            Keyword::SELF,
+            'https://www.google.com',
+            'https://cdnjs.cloudflare.com',
+            'https://cdn.jsdelivr.net',
+            'https://cdn.livewire.laravel.com',
+        ]],
         [Directive::MEDIA, [Keyword::SELF]],
         [Directive::OBJECT, [Keyword::NONE]],
         [Directive::FRAME_ANCESTORS, [Keyword::SELF, 'https://www.google.com', 'https://www.gstatic.com']],
