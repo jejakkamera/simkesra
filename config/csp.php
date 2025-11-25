@@ -17,15 +17,17 @@ return [
      * Register additional global CSP directives here.
      * Follow Spatie v3 format for proper configuration
      * 
-     * REMOVED: unsafe-inline and unsafe-eval for XSS protection
-     * These keywords are now replaced with strict CSP + external resources
+     * SOLUTION: Using nonce-based CSP for strict security
+     * - Livewire/Alpine.js components use nonces for inline content
+     * - External scripts loaded from CDN
+     * - Maintains XSS protection without breaking functionality
      */
     'directives' => [
         [Directive::BASE, [Keyword::SELF]],
         [Directive::DEFAULT, [Keyword::SELF]],
         
-        // SCRIPT: Removed unsafe-inline and unsafe-eval
-        // Livewire scripts are loaded from external CDN
+        // SCRIPT: Nonce-based with external CDN
+        // Spatie automatically adds 'nonce' when nonce_enabled=true
         [Directive::SCRIPT, [
             Keyword::SELF,
             'https://www.google.com',
@@ -34,12 +36,11 @@ return [
             'https://cdn.jsdelivr.net',
             'https://maxcdn.bootstrapcdn.com',
             'https://cdn.datatables.net',
-            // Livewire CDN
             'https://cdn.livewire.laravel.com',
         ]],
         
-        // STYLE: Removed unsafe-inline
-        // All styles are external CSS files
+        // STYLE: Nonce-based with external CSS
+        // Spatie automatically adds 'nonce' when nonce_enabled=true
         [Directive::STYLE, [
             Keyword::SELF,
             'https://fonts.googleapis.com',
@@ -102,10 +103,11 @@ return [
     'nonce_generator' => Spatie\Csp\Nonce\RandomString::class,
 
     /*
-     * Set false to disable automatic nonce generation and handling.
-     * This is useful when you want to use 'unsafe-inline' for scripts/styles
-     * and cannot add inline nonces.
-     * Note that this will make your CSP policy less secure.
+     * ENABLED: Automatic nonce generation for strict CSP security.
+     * 
+     * This allows inline scripts and styles (like Livewire/Alpine.js)
+     * without using unsafe-inline keyword. Each inline element gets a unique nonce.
+     * This is the recommended approach for production security.
      */
-    'nonce_enabled' => env('CSP_NONCE_ENABLED', false),
+    'nonce_enabled' => env('CSP_NONCE_ENABLED', true),
 ];

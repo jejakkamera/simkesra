@@ -20,6 +20,8 @@ $contentLayout = (isset($container) ? (($container === 'container-xxl') ? "layou
   <meta name="keywords" content="{{ config('variables.templateKeyword') ? config('variables.templateKeyword') : '' }}">
   <!-- laravel CRUD token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- CSP Nonce for inline scripts/styles -->
+  <meta name="csp-nonce" content="@cspNonce">
   <!-- Canonical SEO -->
   <link rel="canonical" href="{{ config('variables.productPage') ? config('variables.productPage') : '' }}">
   <!-- Favicon -->

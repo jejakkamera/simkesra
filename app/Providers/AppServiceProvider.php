@@ -15,9 +15,9 @@ class AppServiceProvider extends ServiceProvider
   public function register(): void
   {
     //
-    \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER');
-    \Midtrans\Config::$clientKey = env('MIDTRANS_CLIENT');
-    \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+    // \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER');
+    // \Midtrans\Config::$clientKey = env('MIDTRANS_CLIENT');
+    // \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
   }
 
   /**
@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-
     // Ambil data School dan logo
     $school = School::find(1);
 
