@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>TANDA TERIMA UANG</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css" />
-    <style nonce="@cspNonce">
+    <style>
         @page {
             size: A4;
         }
@@ -72,7 +72,7 @@
 
 
     </style>
-    <style nonce="@cspNonce">@page { size: A4 }</style>
+    <style>@page { size: A4 }</style>
 </head>
 
 <body class="A4">
@@ -234,7 +234,7 @@
         </section>
     @endforeach
 
-    <script nonce="@cspNonce">
+    <script>
         window.print();
     </script>
 </body>

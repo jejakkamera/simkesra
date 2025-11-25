@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<script nonce="@cspNonce">
+<script>
     function startCountdown(seconds) {
         var countdownElement = document.getElementById('countdown');
         var interval = setInterval(function () {

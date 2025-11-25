@@ -141,7 +141,7 @@
 
 </div>
 
-<script nonce="@cspNonce">
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         // Modal for Log Details
         var detailsModal = document.getElementById('detailsModal');

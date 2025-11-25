@@ -102,7 +102,7 @@
     
 
 
-<style nonce="@cspNonce">
+<style>
 .dashboard-slide-img {
     max-height: 400px;
     object-fit: contain;

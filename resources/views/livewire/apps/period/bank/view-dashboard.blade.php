@@ -100,7 +100,7 @@
             }
         @endphp
 
-    <script nonce="@cspNonce">
+    <script>
         var salesPivotData = <?php echo json_encode($pivotData); ?> ;
         // google.load("visualization", "1", {packages:["corechart", "charteditor"]});
         // var derivers = $.pivotUtilities.derivers;

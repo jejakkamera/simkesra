@@ -11,7 +11,7 @@
   @vite(['resources/assets/js/front-config.js'])
 
 @if ($configData['hasCustomizer'])
-<script type="module" nonce="@cspNonce">
+<script type="module">
     window.templateCustomizer = new TemplateCustomizer({
       cssPath: '',
       themesPath: '',

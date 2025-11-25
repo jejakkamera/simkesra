@@ -6,7 +6,7 @@
 @endif
 
 @isset($cssPath)
-    <style nonce="@cspNonce">
+    <style>
         {!! file_get_contents($cssPath) !!}
     </style>
 @endisset

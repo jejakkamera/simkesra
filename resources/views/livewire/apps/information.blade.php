@@ -58,7 +58,7 @@
   
     <!--/ User Content -->
 
-    <script nonce="@cspNonce">
+    <script>
         function copyToClipboard(elementId) {
             // Ambil elemen berdasarkan ID
             const textToCopy = document.getElementById(elementId).innerText;

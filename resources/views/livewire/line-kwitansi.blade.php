@@ -2,7 +2,7 @@
     <canvas id="lineChart" style="width: 100%; height: 400px;"></canvas>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script nonce="@cspNonce">
+    <script>
             if (window.lineChartInstance) {
                 window.lineChartInstance.destroy();
             }

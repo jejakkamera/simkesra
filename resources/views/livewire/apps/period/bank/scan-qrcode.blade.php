@@ -22,7 +22,7 @@
     <div id="result"></div>
 
      <script src="{{ asset('') }}js/jsQR.min.js"></script>
-     <script nonce="@cspNonce">
+     <script>
         let currentStream;
         let currentCameraId;
         const video = document.getElementById("qr-video");

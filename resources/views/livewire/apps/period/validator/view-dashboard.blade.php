@@ -106,7 +106,7 @@
 ======================= --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script nonce="@cspNonce">
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('penerimaChart').getContext('2d');
         const labels = @json($labels);

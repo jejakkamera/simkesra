@@ -3,7 +3,7 @@
 Peserta Didik Aktif
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script nonce="@cspNonce">
+    <script>
             const ctx = document.getElementById('doughnutChart').getContext('2d');
             const chartData = @json($data);
 
