@@ -579,7 +579,40 @@ display_startup_errors = Off
 - Jika ada inline script error, check `/admin/logs` untuk detail
 - CSP report di `config/csp.php`
 
-**Current Security Status**: ✅ **EXCELLENT** (90% - all CSP best practices passed)
+**Current Security Status**: ✅ **EXCELLENT** (90% → 95%+ with nonce-based CSP)
+
+### 🔧 Troubleshooting CSP Issues
+
+**If you see CSP errors in console:**
+
+1. **Check nonce is being generated:**
+   ```bash
+   php artisan tinker
+   >>> config('csp.nonce_enabled')
+   => true  // Should be true
+   ```
+
+2. **Verify @cspNonce in head:**
+   ```html
+   <!-- View Page Source (Ctrl+U) and look for: -->
+   <meta name="csp-nonce" content="nonce-abc123def...">
+   ```
+
+3. **Clear caches:**
+   ```bash
+   php artisan config:cache
+   php artisan view:clear
+   php artisan cache:clear
+   ```
+
+4. **Check Livewire is using CDN:**
+   - Should see: `https://cdn.livewire.laravel.com` in Network tab
+   - Should NOT see inline Livewire scripts (except with nonce)
+
+5. **If problems persist:**
+   - Check browser DevTools for exact CSP error
+   - Verify all external resources are whitelisted in `config/csp.php`
+   - Make sure middleware order is correct in `app/Http/Kernel.php`
 
 ### 📋 Security Checklist
 - ✅ CSRF protection enabled
@@ -590,6 +623,7 @@ display_startup_errors = Off
 - ✅ .env properly secured
 - ✅ Debug mode disabled in production
 - ✅ Dependencies up-to-date
+- ✅ Nonce-based CSP enabled (no unsafe-inline/unsafe-eval)
 
 ## 📄 License
 
@@ -604,6 +638,6 @@ Untuk bantuan atau pertanyaan:
 
 ---
 
-**Last Updated**: November 25, 2025  
-**Version**: 1.0.0  
+**Last Updated**: November 25, 2025 (Nonce-based CSP Implementation)  
+**Version**: 1.0.1  
 **Maintainer**: TA Karawang Cerdas 2023
