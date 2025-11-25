@@ -75,12 +75,14 @@ class Logs extends Component
         $page = $this->page ?? 1;
         $items = collect($this->allLogs);
         $perPage = $this->perPage;
+        $total = $items->count();
         $offset = ($page - 1) * $perPage;
         
         $paginatedItems = $items->slice($offset, $perPage)->all();
         
-        return new \Illuminate\Pagination\Paginator(
+        return new \Illuminate\Pagination\LengthAwarePaginator(
             $paginatedItems,
+            $total,
             $perPage,
             $page,
             [
@@ -127,8 +129,7 @@ class Logs extends Component
     public function render()
     {
         return view('livewire.dashboard.logs', [
-            'logs' => $this->logs ?? collect([]),
-            'totalLogs' => $this->totalLogs
+            'logs' => $this->logs ?? collect([])
         ]);
     }
 }
