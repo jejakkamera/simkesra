@@ -13,9 +13,10 @@ class Kernel extends HttpKernel
    *
    * @var array<int, class-string|string>
    */
+  // \App\Http\Middleware\TrustHosts::class,
   protected $middleware = [
-    // \App\Http\Middleware\TrustHosts::class,
-    \App\Http\Middleware\TrustProxies::class,
+    
+    // \App\Http\Middleware\TrustProxies::class,
     \Illuminate\Http\Middleware\HandleCors::class,
     \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
     \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
@@ -40,7 +41,7 @@ class Kernel extends HttpKernel
       \App\Http\Middleware\VerifyCsrfToken::class,
       \Illuminate\Routing\Middleware\SubstituteBindings::class,
       \App\Http\Middleware\LocaleMiddleware::class,
-
+      \App\Http\Middleware\AddNonceToInlineScripts::class,  // Add nonce to dynamic scripts
     ],
 
     'api' => [

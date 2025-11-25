@@ -26,13 +26,9 @@ return [
         [Directive::BASE, [Keyword::SELF]],
         [Directive::DEFAULT, [Keyword::SELF]],
         
-        // SCRIPT: Nonce-based with external CDN + unsafe-hashes for Alpine.js
-        // - 'nonce' for intentional inline scripts
-        // - 'unsafe-hashes' for Alpine.js and dynamic scripts (more secure than unsafe-inline)
-        // This allows only scripts with matching hash, preventing XSS
+        // SCRIPT: Strict - nonce + external domains only (no unsafe)
         [Directive::SCRIPT, [
             Keyword::SELF,
-            Keyword::UNSAFE_HASHES,  // Allow only hashed inline scripts
             'https://www.google.com',
             'https://www.gstatic.com',
             'https://cdnjs.cloudflare.com',
@@ -42,12 +38,12 @@ return [
             'https://cdn.livewire.laravel.com',
         ]],
         
-        // STYLE: Nonce-based with external CSS + unsafe-hashes
-        // - 'nonce' for intentional inline styles
-        // - 'unsafe-hashes' for component-generated styles (more secure than unsafe-inline)
+        // STYLE: Allow unsafe-inline for component-generated styles
+        // Scripts are strict, but styles need flexibility for framework components
+        // This is safe because style injection doesn't execute code (unlike scripts)
         [Directive::STYLE, [
             Keyword::SELF,
-            Keyword::UNSAFE_HASHES,  // Allow only hashed inline styles
+            Keyword::UNSAFE_INLINE,  // Allow component-injected styles
             'https://fonts.googleapis.com',
             'https://cdn.jsdelivr.net',
             'https://cdnjs.cloudflare.com',
