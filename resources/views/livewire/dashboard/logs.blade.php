@@ -81,17 +81,46 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Date Range Filter --}}
+                <div class="row g-3 mt-1">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold mb-2">
+                            <i class="fas fa-calendar me-1"></i> Date From
+                        </label>
+                        <input type="date" 
+                               wire:model="dateFrom" 
+                               wire:change="filterByDate"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold mb-2">
+                            <i class="fas fa-calendar me-1"></i> Date To
+                        </label>
+                        <input type="date" 
+                               wire:model="dateTo" 
+                               wire:change="filterByDate"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-end">
+                        <button wire:click="resetFilters" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-redo me-1"></i> Reset All Filters
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         {{-- ========================================= --}}
         {{-- 📋 LOGS TABLE --}}
         {{-- ========================================= --}}
-        @if ($logs && $logs->total() > 0)
+        @if ($totalLogs > 0)
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-light border-bottom">
                     <h6 class="mb-0 fw-bold">
-                        <i class="fas fa-list me-2"></i> Total Logs: {{ $logs->total() }}
+                        <i class="fas fa-list me-2"></i> Total Logs: {{ $totalLogs }}
                     </h6>
                 </div>
                 <div class="card-body p-0">
@@ -205,7 +234,7 @@
                         <div class="col-md-6">
                             <small class="text-muted">
                                 Showing {{ $logs->firstItem() ?? 0 }} to {{ $logs->lastItem() ?? 0 }} 
-                                of {{ $logs->total() }} results
+                                of {{ $totalLogs }} results
                             </small>
                         </div>
                         <div class="col-md-6 text-md-end">

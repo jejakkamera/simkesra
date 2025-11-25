@@ -14,6 +14,8 @@ class Logs extends Component
     public $logFile = null;
     public $selectedLevel = 'all';
     public $searchQuery = '';
+    public $dateFrom = '';
+    public $dateTo = '';
     public $logLevels = ['DEBUG', 'INFO', 'NOTICE', 'WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'];
     public $storageLogPath;
     public $perPage = 10;
@@ -61,6 +63,19 @@ class Logs extends Component
                     continue;
                 }
 
+                // Filter by date range
+                if (!empty($this->dateFrom) || !empty($this->dateTo)) {
+                    $logDate = explode(' ', $log['timestamp'])[0]; // Get YYYY-MM-DD part
+                    
+                    if (!empty($this->dateFrom) && $logDate < $this->dateFrom) {
+                        continue;
+                    }
+                    
+                    if (!empty($this->dateTo) && $logDate > $this->dateTo) {
+                        continue;
+                    }
+                }
+
                 $logs[] = $log;
             }
         }
@@ -75,14 +90,12 @@ class Logs extends Component
         $page = $this->page ?? 1;
         $items = collect($this->allLogs);
         $perPage = $this->perPage;
-        $total = $items->count();
         $offset = ($page - 1) * $perPage;
         
         $paginatedItems = $items->slice($offset, $perPage)->all();
         
-        return new \Illuminate\Pagination\LengthAwarePaginator(
+        return new \Illuminate\Pagination\Paginator(
             $paginatedItems,
-            $total,
             $perPage,
             $page,
             [
@@ -108,6 +121,20 @@ class Logs extends Component
         $this->loadLogs();
     }
 
+    public function filterByDate()
+    {
+        $this->loadLogs();
+    }
+
+    public function resetFilters()
+    {
+        $this->selectedLevel = 'all';
+        $this->searchQuery = '';
+        $this->dateFrom = '';
+        $this->dateTo = '';
+        $this->loadLogs();
+    }
+
     public function clearLogs()
     {
         if (File::exists(storage_path('logs/laravel.log'))) {
@@ -129,7 +156,8 @@ class Logs extends Component
     public function render()
     {
         return view('livewire.dashboard.logs', [
-            'logs' => $this->logs ?? collect([])
+            'logs' => $this->logs ?? collect([]),
+            'totalLogs' => $this->totalLogs
         ]);
     }
 }
