@@ -498,16 +498,81 @@ display_startup_errors = Off
 
 Current status: Using `unsafe-inline` dan `unsafe-eval` untuk Livewire compatibility.
 
-⚠️ **Note**: Aplikasi saat ini menggunakan `unsafe-inline` dan `unsafe-eval` karena persyaratan Livewire 3.5 untuk dynamic component rendering. Ini adalah trade-off antara:
-- **Security**: CSP lebih ketat
-- **Functionality**: Livewire reactivity
+**Why Enlightn Failed?**
+- Enlightn scanner mengecek CSP best practices untuk XSS prevention
+- `unsafe-inline` dan `unsafe-eval` secara tidak sengaja memungkinkan inline script injection
+- Ini adalah trade-off antara Security vs Functionality
 
-Untuk production dengan security lebih ketat, pertimbangkan:
-- Update Livewire ke versi terbaru yang support nonce-based CSP
-- Implement trusted types untuk XSS protection lebih lanjut
-- Gunakan CSP report-only mode untuk monitoring
+**Current Situation:**
+```php
+// config/csp.php - DEVELOPMENT
+'script-src' => [
+    Keyword::SELF, 
+    Keyword::UNSAFE_INLINE,      // ⚠️ Reason: Inline styles/scripts needed
+    Keyword::UNSAFE_EVAL,         // ⚠️ Reason: Livewire dynamic functions
+    'https://www.google.com',
+    'https://www.gstatic.com',
+    // ... external CDNs
+]
+```
 
-**Current CSP Config**: `/config/csp.php`
+**Why These Are Required:**
+
+1. **`unsafe-inline`** - Diperlukan untuk:
+   - Inline CSS di Blade templates (`<style>...</style>`)
+   - Inline scripts bootstrap/initialization
+   - Livewire component initialization
+   
+2. **`unsafe-eval`** - Diperlukan untuk:
+   - Livewire dynamic expression evaluation
+   - JavaScript function compilation
+   - Component state management
+
+**Recommendation untuk Production:**
+
+Option 1: Keep Current (Recommended - Livewire Compatible)
+```php
+// Keep unsafe-inline dan unsafe-eval
+// Prioritas: Functionality & Livewire compatibility
+// Risk: Moderate, but mitigated with other CSP directives
+```
+
+Option 2: Strict CSP (Higher Security)
+```php
+// Remove unsafe-inline dan unsafe-eval
+// Require: Refactor all inline styles to external CSS
+// Require: Update Livewire atau use alternative reactive library
+// Risk: Low, Security: High
+// Trade-off: Significant development effort
+```
+
+Option 3: CSP Report-Only Mode (Monitoring)
+```php
+// Use report-only to monitor violations without blocking
+'report_only_directives' => [
+    [Directive::SCRIPT, [
+        Keyword::SELF,
+        // Strict policy tanpa unsafe-*
+    ]],
+    [Directive::STYLE, [
+        Keyword::SELF,
+        'https://fonts.googleapis.com',
+        'https://cdn.jsdelivr.net',
+    ]],
+]
+```
+
+**Current Security Measures (Besides CSP):**
+- ✅ CSRF protection enabled
+- ✅ Secure cookies (HttpOnly)
+- ✅ SQL injection protected (Eloquent ORM)
+- ✅ XSS input sanitization
+- ✅ Output escaping in Blade templates
+- ✅ Authentication & authorization checks
+- ✅ Rate limiting on sensitive endpoints
+- ✅ Dependency vulnerability scanning
+
+**Config File**: `/config/csp.php`
 
 ### 📋 Security Checklist
 - ✅ CSRF protection enabled
