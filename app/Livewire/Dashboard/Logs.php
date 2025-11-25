@@ -3,16 +3,20 @@
 namespace App\Livewire\Dashboard;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\File;
 
 class Logs extends Component
 {
-    public $logs = [];
+    use WithPagination;
+
+    public $allLogs = [];
     public $logFile = null;
     public $selectedLevel = 'all';
     public $searchQuery = '';
     public $logLevels = ['DEBUG', 'INFO', 'NOTICE', 'WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'];
     public $storageLogPath;
+    public $perPage = 10;
 
     public function mount()
     {
@@ -25,7 +29,8 @@ class Logs extends Component
         $logPath = storage_path('logs/laravel.log');
         
         if (!File::exists($logPath)) {
-            $this->logs = [];
+            $this->allLogs = [];
+            $this->resetPage();
             return;
         }
 
@@ -61,7 +66,13 @@ class Logs extends Component
         }
 
         // Reverse to show latest first
-        $this->logs = array_reverse($logs);
+        $this->allLogs = array_reverse($logs);
+        $this->resetPage();
+    }
+
+    public function getLogsProperty()
+    {
+        return collect($this->allLogs)->paginate($this->perPage);
     }
 
     public function filterByLevel($level)
@@ -79,7 +90,8 @@ class Logs extends Component
     {
         if (File::exists(storage_path('logs/laravel.log'))) {
             File::put(storage_path('logs/laravel.log'), '');
-            $this->logs = [];
+            $this->allLogs = [];
+            $this->resetPage();
             session()->flash('message', 'Log file cleared successfully!');
         }
     }

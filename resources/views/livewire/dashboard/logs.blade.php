@@ -87,11 +87,11 @@
         {{-- ========================================= --}}
         {{-- 📋 LOGS TABLE --}}
         {{-- ========================================= --}}
-        @if (count($logs) > 0)
+        @if ($logs->total() > 0)
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-light border-bottom">
                     <h6 class="mb-0 fw-bold">
-                        <i class="fas fa-list me-2"></i> Total Logs: {{ count($logs) }}
+                        <i class="fas fa-list me-2"></i> Total Logs: {{ $logs->total() }}
                     </h6>
                 </div>
                 <div class="card-body p-0">
@@ -196,6 +196,21 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                {{-- PAGINATION --}}
+                <div class="card-footer bg-white border-top">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                Showing {{ $logs->firstItem() ?? 0 }} to {{ $logs->lastItem() ?? 0 }} 
+                                of {{ $logs->total() }} results
+                            </small>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            {{ $logs->links(data: ['scrollTo' => false]) }}
+                        </div>
                     </div>
                 </div>
             </div>
