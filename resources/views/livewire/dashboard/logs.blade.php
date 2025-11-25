@@ -254,7 +254,7 @@
         @endif
     </div>
 
-    <style>
+    <style nonce="@cspNonce">
         .table-hover tbody tr:hover {
             background-color: #f8f9fa !important;
         }

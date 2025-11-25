@@ -255,7 +255,7 @@
     @endif
 
 
-<style>
+<style nonce="@cspNonce">
     th { width: 40%; }
     .table-sm td, .table-sm th { padding: 0.25rem 0.5rem !important; }
     hr.my-3 { margin-top: 0.8rem !important; margin-bottom: 1rem !important; }

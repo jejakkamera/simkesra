@@ -98,7 +98,7 @@
     @endif
 
 
-<style>
+<style nonce="@cspNonce">
 .dashboard-slide-img {
     max-height: 400px;
     object-fit: contain;

@@ -15,7 +15,7 @@ $rtlPath = ($configData['rtlSupport'] === '/rtl') ? '/rtl' : '';
   @vite(['resources/assets/js/config.js'])
 
 @if ($configData['hasCustomizer'])
-<script type="module">
+<script type="module" nonce="@cspNonce">
   window.templateCustomizer = new TemplateCustomizer({
     cssPath: '',
     themesPath: '',

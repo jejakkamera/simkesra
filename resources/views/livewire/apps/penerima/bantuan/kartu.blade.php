@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Kartu Tanda Bukti Pengambilan </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css" />
-    <style>
+    <style nonce="@cspNonce">
         @page {
             size: A4;
         }
@@ -107,7 +107,7 @@
 </div>
 {{-- <hr style="page-break-before: always;"> --}}
 @endforeach
-<script>
+<script nonce="@cspNonce">
     window.print()
   </script>
 

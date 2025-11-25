@@ -74,7 +74,7 @@
     <div class="container d-flex flex-wrap justify-content-between flex-md-row flex-column text-center text-md-start">
       <div class="mb-2 mb-md-0">
         <span class="footer-text">©
-          <script>
+          <script nonce="@cspNonce">
           document.write(new Date().getFullYear());
 
           </script>

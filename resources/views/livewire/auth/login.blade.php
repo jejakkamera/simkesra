@@ -46,7 +46,7 @@
 </div>
 
 
-<script>
+<script nonce="@cspNonce">
     // Callback dari Google reCAPTCHA
     window.recaptchaCallback = function(token) {
         document.getElementById('gRecaptcha').value = token;
