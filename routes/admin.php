@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Dashboard\Admin as Dashboard;
+use App\Livewire\Dashboard\Logs as DashboardLogs;
 use App\Livewire\User\Datalist as UserDatalist;
 use App\Livewire\User\Add as UserCreate;
 use App\Livewire\User\Edit as UserEdit;
@@ -48,8 +49,8 @@ use App\Http\Controllers\Validateqr as Validateqr;
 // Rute untuk dashboard pendaftar
 Route::middleware(['auth', 'checkActiveRole:admin'])->group(function () {
     // ===== LOG VIEWER - PRODUCTION ERROR MONITORING =====
-    // Route untuk melihat error log dari web UI
-    Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('admin.logs');
+    // Route untuk melihat error log dari web UI dengan Livewire component
+    Route::get('/logs', DashboardLogs::class)->name('admin.logs');
     
     Route::get('/dashboard', Dashboard::class);
     Route::get('/staff/teller/datalist', UserDatalistStaff::class)->name('admin.UserDatalistStaff');

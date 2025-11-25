@@ -79,6 +79,14 @@
           "slug": "Staff"
         }
       ]
+    },
+    {
+      "url": "/admin/logs",
+      "name": "Error Logs",
+      "icon": "menu-icon tf-icons ti ti-bug",
+      "slug": "logs",
+      "badge": "New",
+      "badgeColor": "danger"
     }
   ]
 }
