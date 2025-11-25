@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Spatie\Csp\Nonce\RandomString;
 
 class AddNonceToInlineScripts
 {
@@ -20,8 +19,13 @@ class AddNonceToInlineScripts
             return $response;
         }
 
-        // Get the nonce from the request (set by Spatie CSP middleware)
-        $nonce = csp_nonce();
+        // Get the nonce from the container (set by Spatie CSP)
+        // Only inject nonce if it exists in container
+        if (!app()->has('csp-nonce')) {
+            return $response;
+        }
+
+        $nonce = app('csp-nonce');
 
         if (!$nonce) {
             return $response;
