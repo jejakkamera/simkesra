@@ -72,7 +72,23 @@ class Logs extends Component
 
     public function getLogsProperty()
     {
-        return collect($this->allLogs)->paginate($this->perPage);
+        $page = $this->page ?? 1;
+        $items = collect($this->allLogs);
+        $total = $items->count();
+        $perPage = $this->perPage;
+        $offset = ($page - 1) * $perPage;
+        
+        $paginatedItems = $items->slice($offset, $perPage)->all();
+        
+        return new \Illuminate\Pagination\Paginator(
+            $paginatedItems,
+            $perPage,
+            $page,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
     }
 
     public function filterByLevel($level)
