@@ -47,6 +47,10 @@ use App\Http\Controllers\Validateqr as Validateqr;
 
 // Rute untuk dashboard pendaftar
 Route::middleware(['auth', 'checkActiveRole:admin'])->group(function () {
+    // ===== LOG VIEWER - PRODUCTION ERROR MONITORING =====
+    // Route untuk melihat error log dari web UI
+    Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('admin.logs');
+    
     Route::get('/dashboard', Dashboard::class);
     Route::get('/staff/teller/datalist', UserDatalistStaff::class)->name('admin.UserDatalistStaff');
     Route::get('/staff/teller/add', UserCreateStaff::class)->name('admin.UserCreateStaff');
