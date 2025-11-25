@@ -26,10 +26,13 @@ return [
         [Directive::BASE, [Keyword::SELF]],
         [Directive::DEFAULT, [Keyword::SELF]],
         
-        // SCRIPT: Nonce-based with external CDN
-        // Spatie automatically adds 'nonce' when nonce_enabled=true
+        // SCRIPT: Nonce-based with external CDN + unsafe-hashes for Alpine.js
+        // - 'nonce' for intentional inline scripts
+        // - 'unsafe-hashes' for Alpine.js and dynamic scripts (more secure than unsafe-inline)
+        // This allows only scripts with matching hash, preventing XSS
         [Directive::SCRIPT, [
             Keyword::SELF,
+            Keyword::UNSAFE_HASHES,  // Allow only hashed inline scripts
             'https://www.google.com',
             'https://www.gstatic.com',
             'https://cdnjs.cloudflare.com',
@@ -39,10 +42,12 @@ return [
             'https://cdn.livewire.laravel.com',
         ]],
         
-        // STYLE: Nonce-based with external CSS
-        // Spatie automatically adds 'nonce' when nonce_enabled=true
+        // STYLE: Nonce-based with external CSS + unsafe-hashes
+        // - 'nonce' for intentional inline styles
+        // - 'unsafe-hashes' for component-generated styles (more secure than unsafe-inline)
         [Directive::STYLE, [
             Keyword::SELF,
+            Keyword::UNSAFE_HASHES,  // Allow only hashed inline styles
             'https://fonts.googleapis.com',
             'https://cdn.jsdelivr.net',
             'https://cdnjs.cloudflare.com',
