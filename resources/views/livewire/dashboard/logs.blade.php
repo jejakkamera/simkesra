@@ -11,7 +11,7 @@
                 <small class="text-muted">Monitor aplikasi error real-time dari dashboard</small>
             </div>
             <div class="col-md-4 text-md-end">
-                @if (count($logs) > 0)
+                @if ($logs && count($logs) > 0)
                     <button wire:click="downloadLogs" class="btn btn-sm btn-outline-success">
                         <i class="fas fa-download"></i> Download
                     </button>

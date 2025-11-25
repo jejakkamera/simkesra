@@ -106,6 +106,8 @@ class Logs extends Component
 
     public function render()
     {
-        return view('livewire.dashboard.logs');
+        return view('livewire.dashboard.logs', [
+            'logs' => $this->logs ?? collect([])
+        ]);
     }
 }
