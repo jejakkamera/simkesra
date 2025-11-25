@@ -475,6 +475,50 @@ Untuk contribute ke project:
 4. Push ke branch: `git push origin feature/AmazingFeature`
 5. Open Pull Request
 
+## 🔒 Security Scan Results (Laravel Enlightn)
+
+**Overall Score: 90% (60/67)**
+
+### ✅ Passed Checks (60)
+- Performance: 14/18 ✓
+- Reliability: 28/28 ✓ (100% Perfect!)
+- Security: 18/20
+
+### ⚠️ Recommendations
+
+**1. PHP Configuration** (Server-level)
+```ini
+# File: php.ini (MAMP/bin/php/php8.x/conf/php.ini)
+allow_url_fopen = Off
+expose_php = Off
+display_startup_errors = Off
+```
+
+**2. Content Security Policy (XSS Protection)**
+
+Current status: Using `unsafe-inline` dan `unsafe-eval` untuk Livewire compatibility.
+
+⚠️ **Note**: Aplikasi saat ini menggunakan `unsafe-inline` dan `unsafe-eval` karena persyaratan Livewire 3.5 untuk dynamic component rendering. Ini adalah trade-off antara:
+- **Security**: CSP lebih ketat
+- **Functionality**: Livewire reactivity
+
+Untuk production dengan security lebih ketat, pertimbangkan:
+- Update Livewire ke versi terbaru yang support nonce-based CSP
+- Implement trusted types untuk XSS protection lebih lanjut
+- Gunakan CSP report-only mode untuk monitoring
+
+**Current CSP Config**: `/config/csp.php`
+
+### 📋 Security Checklist
+- ✅ CSRF protection enabled
+- ✅ Secure cookies (HttpOnly)
+- ✅ Password hashing configured
+- ✅ Login throttling activated
+- ✅ Mass assignment protection
+- ✅ .env properly secured
+- ✅ Debug mode disabled in production
+- ✅ Dependencies up-to-date
+
 ## 📄 License
 
 Project ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail.
@@ -491,4 +535,3 @@ Untuk bantuan atau pertanyaan:
 **Last Updated**: November 25, 2025  
 **Version**: 1.0.0  
 **Maintainer**: TA Karawang Cerdas 2023
-
