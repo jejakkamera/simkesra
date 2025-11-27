@@ -2,14 +2,11 @@
 
 **Last Updated:** November 27, 2025  
 **Repository:** jejakkamera/simkesra
-
----
-
 ## 📋 Branch Structure
 
 ```
 main (production)
-  ↳ developer (development)
+  ↳ dev (development)
      ↳ feature/* (feature branches)
      ↳ bugfix/* (bug fixes)
      ↳ hotfix/* (urgent fixes)
@@ -18,7 +15,7 @@ main (production)
 ### Branch Descriptions
 
 - **`main`** - Production-ready code, stable releases only
-- **`developer`** - Active development, integration branch
+- **`dev`** - Active development, integration branch
 - **`feature/*`** - New features (e.g., `feature/user-management`)
 - **`bugfix/*`** - Bug fixes (e.g., `bugfix/login-error`)
 - **`hotfix/*`** - Critical production fixes (e.g., `hotfix/security-patch`)
@@ -28,7 +25,7 @@ main (production)
 ## 🚀 Current Remote Configuration
 
 ```bash
-origin      git@git.karawangkab.go.id:dika/setda-simkresa.git
+origin      https://git.karawangkab.go.id/dika/setda-simkresa.git
 old-origin  https://github.com/jejakkamera/simkesra.git (backup/mirror)
 ```
 
@@ -43,9 +40,8 @@ old-origin  https://github.com/jejakkamera/simkesra.git (backup/mirror)
 ### 1. Starting New Feature
 
 ```bash
-# Make sure you're on developer branch
-git checkout developer
-git pull old-origin developer
+git checkout dev
+git pull origin dev
 
 # Create feature branch
 git checkout -b feature/nama-fitur
@@ -53,124 +49,114 @@ git checkout -b feature/nama-fitur
 # Work on your feature...
 # ... commit changes ...
 
-# Push to remote
-git push old-origin feature/nama-fitur
+# Push feature branch
+git push origin feature/nama-fitur              # Primary remote
+git push old-origin feature/nama-fitur          # Optional backup mirror
 ```
 
 ### 2. Daily Development Work
 
 ```bash
-# On developer branch
-git checkout developer
+git checkout dev
+git pull origin dev
 
-# Pull latest changes
-git pull old-origin developer
-
-# Make changes
-# ... edit files ...
-
-# Stage and commit
+# Make changes, then stage & commit
 git add .
 git commit -m "feat: descriptive message"
 
 # Push changes
-git push old-origin developer
+git push origin dev
+git push old-origin dev
 ```
 
-### 3. Creating Feature Branch
+### 3. Creating Feature Branch (detailed example)
 
 ```bash
-# From developer branch
-git checkout developer
-git pull old-origin developer
+git checkout dev
+git pull origin dev
 
-# Create and switch to feature branch
 git checkout -b feature/payment-gateway
 
-# Work on feature
-# ... make changes ...
+# ... develop feature ...
 
-# Commit regularly
 git add .
 git commit -m "feat(payment): add payment gateway integration"
 
-# Push feature branch
+git push origin feature/payment-gateway
 git push old-origin feature/payment-gateway
 ```
 
-### 4. Merging Feature to Developer
+### 4. Merging Feature to Dev
 
 ```bash
-# Update developer branch first
-git checkout developer
-git pull old-origin developer
+git checkout dev
+git pull origin dev
 
-# Merge feature branch
 git merge feature/payment-gateway
 
-# Resolve conflicts if any
-# ... fix conflicts ...
+# Resolve conflicts if needed
 
-# Push merged changes
-git push old-origin developer
+git push origin dev
+git push old-origin dev
 
-# Delete feature branch (optional)
+# Cleanup (optional)
 git branch -d feature/payment-gateway
+git push origin --delete feature/payment-gateway
 git push old-origin --delete feature/payment-gateway
 ```
 
 ### 5. Bug Fix Workflow
 
 ```bash
-# From developer branch
-git checkout developer
+git checkout dev
+git pull origin dev
+
 git checkout -b bugfix/fix-login-redirect
 
-# Fix the bug
-# ... make changes ...
+# ... fix the bug ...
 
-# Commit fix
 git add .
 git commit -m "fix(auth): resolve login redirect issue"
 
-# Push bugfix
+git push origin bugfix/fix-login-redirect
 git push old-origin bugfix/fix-login-redirect
 
-# Merge to developer
-git checkout developer
+git checkout dev
 git merge bugfix/fix-login-redirect
-git push old-origin developer
+
+git push origin dev
+git push old-origin dev
+
+git branch -d bugfix/fix-login-redirect
+git push origin --delete bugfix/fix-login-redirect
+git push old-origin --delete bugfix/fix-login-redirect
 ```
 
 ### 6. Hotfix for Production (Urgent)
 
 ```bash
-# From main branch
 git checkout main
-git pull old-origin main
+git pull origin main
 
-# Create hotfix branch
 git checkout -b hotfix/critical-security-fix
 
-# Fix the issue
-# ... make changes ...
+# ... address the production issue ...
 
-# Commit
 git add .
 git commit -m "fix(security): patch XSS vulnerability"
 
-# Merge to main
 git checkout main
 git merge hotfix/critical-security-fix
+git push origin main
 git push old-origin main
 
-# Also merge to developer
-git checkout developer
+git checkout dev
 git merge hotfix/critical-security-fix
-git push old-origin developer
+git push origin dev
+git push old-origin dev
 
-# Tag the release
 git tag -a v1.0.1 -m "Security hotfix"
+git push origin v1.0.1
 git push old-origin v1.0.1
 ```
 
@@ -217,32 +203,35 @@ chore(deps): update Laravel to 11.46.1
 ### Pull Latest Changes
 
 ```bash
-# Pull from developer branch
-git checkout developer
-git pull old-origin developer
+# Pull from dev branch
+git checkout dev
+git pull origin dev
 
 # If you have local changes, use rebase
-git pull --rebase old-origin developer
+git pull --rebase origin dev
 ```
 
 ### Push Your Changes
 
 ```bash
 # Push current branch
-git push old-origin <branch-name>
+git push origin <branch-name>
 
 # Push all branches
-git push old-origin --all
+git push origin --all
 
 # Push tags
-git push old-origin --tags
+git push origin --tags
+
+# Mirror (optional)
+git push old-origin <branch-name>
 ```
 
 ### Fetch All Branches
 
 ```bash
 # Fetch all remote branches
-git fetch old-origin
+git fetch origin
 
 # List all branches
 git branch -a
@@ -250,14 +239,14 @@ git branch -a
 
 ---
 
-## 🚢 Release Workflow (Developer → Main)
+## 🚢 Release Workflow (Dev → Main)
 
 ### Preparing for Release
 
 ```bash
-# 1. Ensure developer is up to date
-git checkout developer
-git pull old-origin developer
+# 1. Ensure dev is up to date
+git checkout dev
+git pull origin dev
 
 # 2. Run all tests
 php artisan test
@@ -269,7 +258,8 @@ php artisan enlightn
 # 4. Create release commit
 git add .
 git commit -m "chore(release): prepare v1.1.0"
-git push old-origin developer
+git push origin dev
+git push old-origin dev
 ```
 
 ### Merging to Main (Production)
@@ -277,15 +267,17 @@ git push old-origin developer
 ```bash
 # 1. Switch to main
 git checkout main
-git pull old-origin main
+git pull origin main
 
-# 2. Merge developer into main
-git merge developer
+# 2. Merge dev into main
+git merge dev
 
 # 3. Tag the release
 git tag -a v1.1.0 -m "Release version 1.1.0"
 
 # 4. Push to production
+git push origin main
+git push origin v1.1.0
 git push old-origin main
 git push old-origin v1.1.0
 
@@ -303,7 +295,7 @@ git push old-origin v1.1.0
 - ✅ No direct pushes (except hotfixes)
 - ✅ Require signed commits (optional)
 
-### For `developer` branch:
+### For `dev` branch:
 - ✅ Require pull request for features
 - ✅ Allow direct pushes for small changes
 - ✅ Require tests to pass
@@ -358,14 +350,13 @@ git branch -m <old> <new>     # Rename branch
 ## 📊 Current Branch Status
 
 ```
-Branch: developer (active development)
-  ↳ Last commit: 2a960d3 "ok"
-  ↳ Commits ahead of main: 0
-  ↳ Status: Clean, up to date
+Branch: dev (active development)
+   ↳ Tracks all day-to-day work
+   ↳ Merge target for feature/bugfix branches
 
 Branch: main (production)
-  ↳ Last commit: 2a960d3 "ok"
-  ↳ Status: Stable, production-ready
+   ↳ Syncs with tested releases from dev
+   ↳ Always deploy from this branch
 ```
 
 ---
@@ -408,8 +399,8 @@ Branch: main (production)
 ## ✅ Quick Reference
 
 ```bash
-# Switch to developer branch
-git checkout developer
+# Switch to dev branch
+git checkout dev
 
 # Create feature branch
 git checkout -b feature/new-feature
@@ -418,13 +409,17 @@ git checkout -b feature/new-feature
 git add .
 git commit -m "feat: add new feature"
 
-# Push to remote
+# Push to primary remote
+git push origin <branch-name>
+
+# Mirror when needed
 git push old-origin <branch-name>
 
-# Merge to developer
-git checkout developer
+# Merge back to dev
+git checkout dev
 git merge feature/new-feature
-git push old-origin developer
+git push origin dev
+git push old-origin dev
 
 # Check status
 git status
@@ -433,6 +428,7 @@ git log --oneline -5
 
 ---
 
-**Current Active Branch:** `developer`  
+**Current Active Branch:** `dev`  
 **Production Branch:** `main`  
-**Remote:** `old-origin` (GitHub backup)
+**Primary Remote:** `origin` (Karawang GitLab)  
+**Backup Remote:** `old-origin` (GitHub mirror)
