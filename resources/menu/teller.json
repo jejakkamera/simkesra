@@ -1,0 +1,22 @@
+{
+    "menu": [
+      {
+        "url": "teller/dashboard",
+        "name": "Home",
+        "icon": "menu-icon tf-icons ti ti-smart-home",
+        "slug": "pages-home"
+      },
+      {
+        "name": "Teller",
+        "icon": "menu-icon tf-icons ti ti-user-dollar",
+        "slug": "Pendaftar",
+        "submenu": [
+          {
+            "url": "/teller/apps/period/bank/datalist",
+            "name": "Periode",
+            "slug": "Staff"
+          }
+        ]
+      }
+    ]
+  }

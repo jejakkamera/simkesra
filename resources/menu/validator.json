@@ -1,0 +1,23 @@
+{
+    "menu": [
+      {
+        "url": "validator/dashboard",
+        "name": "Home",
+        "icon": "menu-icon tf-icons ti ti-smart-home",
+        "slug": "pages-home"
+      },
+      {
+        "name": "Validator",
+        "icon": "menu-icon tf-icons ti ti-user-check",
+        "slug": "validasi",
+        "submenu": [
+         
+          {
+            "url": "/validator/apps/period/validator/datalist",
+            "name": "Periode",
+            "slug": "Staff"
+          }
+        ]
+      }
+    ]
+  }
