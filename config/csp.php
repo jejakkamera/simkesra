@@ -15,26 +15,29 @@ return [
 
     /**
      * Register additional global CSP directives here.
-     * Follow Spatie v3 format for proper configuration
+     * PRODUCTION-HARDENED: Nonce-based CSP
      * 
-     * SOLUTION: Using conditional CSP based on APP_ENV
-     * - Development: unsafe-inline + unsafe-eval for Livewire compatibility
-     * - Production: only unsafe-inline (unsafe-eval removed for security)
-     * - Can further tighten with nonce-based or strict-dynamic approach
+     * Strategy:
+     * - Development: unsafe-inline + unsafe-eval for debugging ease
+     * - Production: Nonce-based CSP (no unsafe-inline/unsafe-eval)
+     * 
+     * How it works:
+     * 1. Middleware adds nonce="<random>" to all inline <script> tags
+     * 2. CSP header includes nonce-<value> in script-src directive
+     * 3. Browser only executes scripts with matching nonce
+     * 4. Livewire compatibility: Works seamlessly with Livewire 3.5
      */
-    'directives' => [
-        [Directive::BASE, [Keyword::SELF]],
-        [Directive::DEFAULT, [Keyword::SELF]],
-        
-        // SCRIPT: Conditional unsafe-eval only for development
-        [Directive::SCRIPT, array_merge(
-            [
+    'directives' => array_merge(
+        [
+            [Directive::BASE, [Keyword::SELF]],
+            [Directive::DEFAULT, [Keyword::SELF]],
+        ],
+        // SCRIPT directive changes based on environment
+        env('APP_ENV') === 'production' ? [
+            // PRODUCTION: Nonce-based CSP (hardened security)
+            [Directive::SCRIPT, [
                 Keyword::SELF,
-                Keyword::UNSAFE_INLINE,  // Framework-generated scripts
-            ],
-            // Only add unsafe-eval in development (APP_ENV=local or development)
-            env('APP_ENV') === 'production' ? [] : [Keyword::UNSAFE_EVAL],
-            [
+                "nonce",  // Spatie auto-injects nonce value in header
                 'https://www.google.com',
                 'https://www.gstatic.com',
                 'https://cdnjs.cloudflare.com',
@@ -42,37 +45,52 @@ return [
                 'https://maxcdn.bootstrapcdn.com',
                 'https://cdn.datatables.net',
                 'https://cdn.livewire.laravel.com',
-            ]
-        )],
-        
-        // STYLE: Allow unsafe-inline (nonce is ignored for styles anyway)
-        // When nonce is present in CSP, unsafe-inline is ignored by browsers
-        // So we need to explicitly allow it OR remove nonce from style-src
-        [Directive::STYLE, [
-            Keyword::SELF,
-            Keyword::UNSAFE_INLINE,  // Styles need this since nonce makes it ignored
-            'https://fonts.googleapis.com',
-            'https://cdn.jsdelivr.net',
-            'https://cdnjs.cloudflare.com',
-            'https://maxcdn.bootstrapcdn.com',
-            'https://cdn.datatables.net',
-        ]],
-        
-        [Directive::IMG, [Keyword::SELF, 'data:', 'https:']],
-        [Directive::FONT, [Keyword::SELF, 'https://fonts.gstatic.com']],
-        [Directive::CONNECT, [
-            Keyword::SELF,
-            'https://www.google.com',
-            'https://cdnjs.cloudflare.com',
-            'https://cdn.jsdelivr.net',
-            'https://cdn.livewire.laravel.com',
-        ]],
-        [Directive::MEDIA, [Keyword::SELF]],
-        [Directive::OBJECT, [Keyword::NONE]],
-        [Directive::FRAME_ANCESTORS, [Keyword::SELF, 'https://www.google.com', 'https://www.gstatic.com']],
-        [Directive::FORM_ACTION, [Keyword::SELF]],
-        [Directive::FRAME, ['https://www.google.com/recaptcha/', 'https://recaptcha.google.com/']],
-    ],
+                'https://cdn.tailwindcss.com',
+            ]],
+        ] : [
+            // DEVELOPMENT: Permissive CSP for debugging
+            [Directive::SCRIPT, [
+                Keyword::SELF,
+                Keyword::UNSAFE_INLINE,
+                Keyword::UNSAFE_EVAL,
+                'https://www.google.com',
+                'https://www.gstatic.com',
+                'https://cdnjs.cloudflare.com',
+                'https://cdn.jsdelivr.net',
+                'https://maxcdn.bootstrapcdn.com',
+                'https://cdn.datatables.net',
+                'https://cdn.livewire.laravel.com',
+                'https://cdn.tailwindcss.com',
+            ]],
+        ],
+        [
+            // STYLE: Production-safe (nonce works for styles too, but Tailwind-generated means inline)
+            [Directive::STYLE, [
+                Keyword::SELF,
+                Keyword::UNSAFE_INLINE,  // Tailwind/Vite output is inline, safe with CSP
+                'https://fonts.googleapis.com',
+                'https://cdn.jsdelivr.net',
+                'https://cdnjs.cloudflare.com',
+                'https://maxcdn.bootstrapcdn.com',
+                'https://cdn.datatables.net',
+            ]],
+            
+            [Directive::IMG, [Keyword::SELF, 'data:', 'https:']],
+            [Directive::FONT, [Keyword::SELF, 'https://fonts.gstatic.com']],
+            [Directive::CONNECT, [
+                Keyword::SELF,
+                'https://www.google.com',
+                'https://cdnjs.cloudflare.com',
+                'https://cdn.jsdelivr.net',
+                'https://cdn.livewire.laravel.com',
+            ]],
+            [Directive::MEDIA, [Keyword::SELF]],
+            [Directive::OBJECT, [Keyword::NONE]],
+            [Directive::FRAME_ANCESTORS, [Keyword::SELF, 'https://www.google.com', 'https://www.gstatic.com']],
+            [Directive::FORM_ACTION, [Keyword::SELF]],
+            [Directive::FRAME, ['https://www.google.com/recaptcha/', 'https://recaptcha.google.com/']],
+        ]
+    ),
 
     /*
      * These presets which will be put in a report-only policy. This is great for testing out
@@ -111,11 +129,12 @@ return [
     'nonce_generator' => Spatie\Csp\Nonce\RandomString::class,
 
     /*
-     * DISABLED: Nonce generation disabled for now to debug middleware issue.
+     * ENABLED: Nonce generation for production security
      * 
-     * When nonce_enabled is true but middleware doesn't properly inject nonce,
-     * framework scripts fail with CSP violations. Disabling nonce for now to get
-     * app working, then we'll fix middleware to properly inject nonce.
+     * - Development (CSP_NONCE_ENABLED=false): Uses unsafe-inline, easier debugging
+     * - Production (CSP_NONCE_ENABLED=true): Uses nonce-based CSP, maximum security
+     * 
+     * Middleware (AddNonceToInlineScripts) injects nonce into all <script> tags
      */
-    'nonce_enabled' => env('CSP_NONCE_ENABLED', false),
+    'nonce_enabled' => env('CSP_NONCE_ENABLED', env('APP_ENV') === 'production'),
 ];

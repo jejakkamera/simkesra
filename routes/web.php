@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\MiscError;
+use App\Http\Controllers\ImpersonationController;
 // use App\Http\Controllers\authentications\LoginBasic;
 // use App\Http\Controllers\authentications\RegisterBasic;
 use App\Livewire\Counter;
@@ -72,5 +73,9 @@ Route::get('/profile', UserProfile::class)->name('UserProfile');
 Route::get('/force-error', function () {
     // Paksa terjadinya error 500
     throw new HttpException(500, 'This is a forced 500 error.');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/impersonation/leave', [ImpersonationController::class, 'leave'])->name('impersonation.leave');
 });
 

@@ -35,6 +35,23 @@ $navbarDetached = ($navbarDetached ?? '');
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
 
+        @if(session()->has('impersonator_id'))
+        <div class="impersonation-banner d-flex align-items-center bg-label-warning rounded px-3 py-2 me-3 gap-3 flex-wrap">
+          <div class="text-dark">
+            <small class="text-muted d-block">Sedang login sebagai</small>
+            <span class="fw-semibold">{{ Auth::user()->name ?? 'Pengguna' }}</span>
+            <small class="text-muted d-block">Admin: {{ session('impersonator_name') }}</small>
+          </div>
+          <form method="POST" action="{{ route('impersonation.leave') }}" class="mb-0">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-dark d-flex align-items-center">
+              <i class="ti ti-user-shield me-1"></i>
+              Kembali ke admin
+            </button>
+          </form>
+        </div>
+        @endif
+
         @if($configData['hasCustomizer'] == true)
         <!-- Style Switcher -->
         <div class="navbar-nav align-items-center">

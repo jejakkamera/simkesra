@@ -11,6 +11,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use \Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Auth;
 
 class Datalist extends PowerGridComponent
 {
@@ -18,6 +19,7 @@ class Datalist extends PowerGridComponent
     use WithExport;
     public string $sortField = 'name';
     public string $tableName = 'userlist1';
+    public string $testMessage = 'test-not-fired';
 
 
     public function datasource(): Builder
@@ -86,7 +88,7 @@ class Datalist extends PowerGridComponent
 
     public function actions(User $row): array
     {
-        return [
+        $actions = [
             Button::add('edit')
                 ->slot("<i class='fas fa-edit'></i>")
                 ->route(session('active_role') . '.UserEdit', ['UserId' => $row->id])
@@ -104,6 +106,8 @@ class Datalist extends PowerGridComponent
                 ->class('btn btn-xs btn-outline-danger')
                 ->dispatch('delete', ['id' => $row->id]),
         ];
+
+        return $actions;
     }
 
     #[On('delete')]
@@ -112,5 +116,45 @@ class Datalist extends PowerGridComponent
         User::find($id)->delete();
         session()->flash('message', 'User Delete successfully');
         $this->redirectRoute(session('active_role') . '.UserDatalist');
+    }
+
+    #[On('login-as')]
+    public function loginAs($id): void
+    {
+        if (!$id || !Auth::check()) {
+            session()->flash('error', 'ID pengguna tidak valid');
+            return;
+        }
+
+        if (session('active_role') !== 'admin') {
+            abort(403, 'Hanya admin yang diperbolehkan melakukan login sebagai user lain.');
+        }
+
+        if ((int) Auth::id() === (int) $id) {
+            session()->flash('message', 'Anda sudah menggunakan akun ini.');
+            return;
+        }
+
+        $targetUser = User::findOrFail($id);
+
+        session([
+            'impersonator_id' => Auth::id(),
+            'impersonator_name' => Auth::user()->name,
+            'impersonator_role' => session('active_role'),
+        ]);
+
+        Auth::login($targetUser);
+        session(['active_role' => $targetUser->role ?? session('active_role')]);
+// dd(session('active_role'));
+        $role = $targetUser->role ?? session('active_role');
+        $roleSlug = trim($role, '/') ?: 'admin';
+        $this->redirectRoute(session('active_role') . '.Dashboard', navigate: true);
+    }
+
+    #[On('test-event')]
+    public function testEvent($id = null): void
+    {
+        $this->testMessage = 'test-fired-with-' . ($id ?? 'no-id');
+        dd($this->testMessage);
     }
 }

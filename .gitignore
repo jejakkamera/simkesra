@@ -15,7 +15,9 @@ public/hot
 public_html/storage
 public_html/hot
 
-storage/*.key
+# storage/*.key
+storage/framework/views/
+storage/framework/cache/
 .env
 Homestead.yaml
 Homestead.json
@@ -23,7 +25,7 @@ Homestead.json
 .phpunit.result.cache
 
 /public/build
-/storage/pail
+# /storage/pail
 .env.backup
 .env.production
 .phpactor.json

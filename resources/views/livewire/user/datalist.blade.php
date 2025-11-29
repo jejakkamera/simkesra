@@ -1,3 +1,5 @@
 <div>
-    {{-- Be like water. --}}
+    <div class="alert alert-info">
+        Test Message: <strong>{{ $testMessage }}</strong>
+    </div>
 </div>
