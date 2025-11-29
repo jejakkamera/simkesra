@@ -1,1 +1,0 @@
-<a href="https://simkesra.test/admin/staff/add" class="btn btn-lg btn-primary"><i class='fas fa-plus'></i></a>

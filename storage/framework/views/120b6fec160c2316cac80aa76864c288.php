@@ -1,1 +1,0 @@
-<a title="Plot Skema" class="btn btn-xs btn-outline-info" href="https://simkesra.test/admin/staff/plot/plotskema?UserId=285a09a1-74d2-4737-bc7b-cef94e41627a"><i class='fas fa-cloud'></i></a><?php /**PATH /Applications/MAMP/htdocs/83/simkesra/storage/framework/views/e21a1cb3b034fdc616ce6af2e3c485dd.blade.php ENDPATH**/ ?>

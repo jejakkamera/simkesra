@@ -1,1 +1,0 @@
-<a href="https://simkesra.test/admin/staff/add" class="btn btn-lg btn-primary"><i class='fas fa-plus'></i></a><?php /**PATH /Applications/MAMP/htdocs/83/simkesra/storage/framework/views/f2b4ca6befb6db7d9be374f7478262c6.blade.php ENDPATH**/ ?>
