@@ -1,0 +1,1 @@
+<button wire:click="$dispatch(&#039;delete&#039;, JSON.parse(&#039;{\u0022id\u0022:\u0022abc68860-3663-4af3-9937-5e359ae49984\u0022}&#039;))" class="btn btn-xs btn-outline-danger"><i class='fas fa-trash'></i></button>

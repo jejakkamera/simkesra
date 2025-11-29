@@ -1,0 +1,1 @@
+<a title="Plot Role" class="btn btn-xs btn-outline-info" href="https://simkesra.test/admin/staff/plotrole?UserId=285a09a1-74d2-4737-bc7b-cef94e41627a"><i class='fas fa-user'></i></a><?php /**PATH /Applications/MAMP/htdocs/83/simkesra/storage/framework/views/c9576263e61bffea62e24614eb690f99.blade.php ENDPATH**/ ?>

@@ -1,0 +1,1 @@
+<button wire:click="$dispatch(&#039;delete&#039;, JSON.parse(&#039;{\u0022id\u0022:\u0022285a09a1-74d2-4737-bc7b-cef94e41627a\u0022}&#039;))" class="btn btn-xs btn-outline-danger"><i class='fas fa-trash'></i></button><?php /**PATH /Applications/MAMP/htdocs/83/simkesra/storage/framework/views/2d06f2e1b28350b7f94a9bee3f69bdbe.blade.php ENDPATH**/ ?>

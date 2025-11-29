@@ -1,0 +1,1 @@
+<a title="Edit Record" class="btn btn-xs btn-outline-warning" href="https://simkesra.test/admin/staff/edit?UserId=285a09a1-74d2-4737-bc7b-cef94e41627a"><i class='fas fa-edit'></i></a><?php /**PATH /Applications/MAMP/htdocs/83/simkesra/storage/framework/views/d4588995d962ba770c07beba23b3f11c.blade.php ENDPATH**/ ?>
