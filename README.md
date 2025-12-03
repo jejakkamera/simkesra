@@ -159,8 +159,11 @@ chown -R www-data:www-data storage bootstrap/cache
 # Publish Livewire assets
 php artisan livewire:publish --assets
 
-# Publish Filament assets
-php artisan filament:publish
+# Publish Filament assets (opsional - untuk publish config)
+php artisan vendor:publish --tag=filament-config
+
+# Atau untuk install/republish assets Filament
+php artisan filament:assets
 ```
 
 ## ⚙️ Konfigurasi
