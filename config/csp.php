@@ -46,6 +46,7 @@ return [
                 'https://cdn.datatables.net',
                 'https://cdn.livewire.laravel.com',
                 'https://cdn.tailwindcss.com',
+                'https://cdn.plot.ly',
             ]],
         ] : [
             // DEVELOPMENT: Permissive CSP for debugging
@@ -61,11 +62,12 @@ return [
                 'https://cdn.datatables.net',
                 'https://cdn.livewire.laravel.com',
                 'https://cdn.tailwindcss.com',
+                'https://cdn.plot.ly',
             ]],
         ],
         [
             // STYLE: Production-safe (nonce works for styles too, but Tailwind-generated means inline)
-            [Directive::STYLE, [
+    [Directive::STYLE, [
                 Keyword::SELF,
                 Keyword::UNSAFE_INLINE,  // Tailwind/Vite output is inline, safe with CSP
                 'https://fonts.googleapis.com',
@@ -73,6 +75,7 @@ return [
                 'https://cdnjs.cloudflare.com',
                 'https://maxcdn.bootstrapcdn.com',
                 'https://cdn.datatables.net',
+                'https://cdn.plot.ly',
             ]],
             
             [Directive::IMG, [Keyword::SELF, 'data:', 'https:']],
