@@ -39,9 +39,11 @@ class Dashboard extends Component
         // =========================================
         // 2️⃣ Ambil bantuan milik user
         // =========================================
+        // Join ke bantuan_kelurahan dulu karena bantuan_kelurahan_id mereferensi bantuan_kelurahan.id
         $filterIds = \App\Models\UserBantuan::query()
             ->join('bantuan', 'bantuan.id', '=', 'user_bantuan.bantuan_id')
-            ->leftJoin('kelurahans as k', 'k.id', '=', 'user_bantuan.bantuan_kelurahan_id')
+            ->leftJoin('bantuan_kelurahan as bk', 'bk.id', '=', 'user_bantuan.bantuan_kelurahan_id')
+            ->leftJoin('kelurahans as k', 'k.id', '=', 'bk.kelurahan_id')
             ->where('user_id', auth()->user()->id)
             ->select(
                 'bantuan.id as bantuan_id',

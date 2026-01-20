@@ -179,14 +179,30 @@ class PemenanganCreate extends Component implements Forms\Contracts\HasForms
      */
     public function form(Form $form): Form
     {
+        // Join ke bantuan_kelurahan dulu, lalu ke kelurahans
+        // karena user_bantuan.bantuan_kelurahan_id mereferensi bantuan_kelurahan.id
         $bantuanOptions = UserBantuan::query()
             ->join('bantuan', 'bantuan.id', '=', 'user_bantuan.bantuan_id')
-            ->leftJoin('kelurahans as k', 'k.id', '=', 'user_bantuan.bantuan_kelurahan_id')
+            ->leftJoin('bantuan_kelurahan as bk', 'bk.id', '=', 'user_bantuan.bantuan_kelurahan_id')
+            ->leftJoin('kelurahans as k', 'k.id', '=', 'bk.kelurahan_id')
+            ->leftJoin('wilayah_kec as wk', 'wk.id_wil', '=', 'k.id_kec')
             ->where('user_id', auth()->user()->id)
-            ->select('bantuan.id as id', 'bantuan.judul', 'bantuan.wilayah', 'k.kemendagri_kelurahan_nama')
+            ->select(
+                'user_bantuan.id as ub_id',
+                'bantuan.id as bantuan_id', 
+                'bantuan.judul', 
+                'bantuan.wilayah', 
+                'k.kemendagri_kelurahan_nama',
+                'wk.nm_wil as kecamatan_nama'
+            )
             ->get()
             ->mapWithKeys(fn($b) => [
-                $b->id => "{$b->judul} - " . ($b->kemendagri_kelurahan_nama ?? $b->wilayah ?? 'Semua Wilayah')
+                // Gunakan user_bantuan.id sebagai key untuk identifikasi unik
+                $b->ub_id => "{$b->judul} - " . (
+                    $b->kemendagri_kelurahan_nama 
+                        ? "{$b->kecamatan_nama} - {$b->kemendagri_kelurahan_nama}" 
+                        : ($b->wilayah ?? 'Semua Wilayah')
+                )
             ])
             ->toArray();
 
@@ -241,8 +257,20 @@ class PemenanganCreate extends Component implements Forms\Contracts\HasForms
                 return;
             }
 
+            // idbantuan sekarang adalah user_bantuan.id, perlu lookup bantuan_id
+            $userBantuanId = $state['idbantuan'];
+            $userBantuan = UserBantuan::find($userBantuanId);
+            
+            if (!$userBantuan) {
+                session()->flash('error', '⚠️ Skema bantuan tidak valid.');
+                DB::rollBack();
+                return;
+            }
+
+            $bantuanId = $userBantuan->bantuan_id;
+
             $exists = Pemenangan::where('profile_id', $this->selectedProfile->id)
-                ->where('idbantuan', $state['idbantuan'])
+                ->where('idbantuan', $bantuanId)
                 ->where('periode', $this->periode)
                 ->exists();
 
@@ -255,7 +283,7 @@ class PemenanganCreate extends Component implements Forms\Contracts\HasForms
             $pemenangan = Pemenangan::create([
                 'id' => Str::uuid(),
                 'profile_id' => $this->selectedProfile->id,
-                'idbantuan' => $state['idbantuan'],
+                'idbantuan' => $bantuanId,
                 'periode' => $this->periode,
                 'verif_teller' => '-',
                 'created_at' => now(),

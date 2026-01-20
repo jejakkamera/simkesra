@@ -4,6 +4,7 @@ namespace App\Livewire\User\Skema;
 
 use App\Models\User;
 use App\Models\Skema;
+use App\Models\UserBantuan;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Filament\Forms\Form;
@@ -31,24 +32,38 @@ class Plot extends Component implements HasForms
         }
 
         // Hapus data lama user (supaya sync)
-        \App\Models\UserBantuan::where('user_id', $this->user->id)->delete();
+        UserBantuan::where('user_id', $this->user->id)->delete();
 
         $insertData = [];
+        $role = $this->user->role ?? null;
 
         foreach ($selected as $value) {
-            // Format: "bantuan_id|bantuan_kelurahan_id"
-            [$bantuanId, $bantuanKelurahanId] = explode('|', $value) + [null, null];
+            if ($role === 'validator') {
+                // Format validator: "bantuan_id|bantuan_kelurahan_id"
+                $parts = explode('|', $value);
+                $bantuanId = (int) $parts[0];
+                $bantuanKelurahanId = isset($parts[1]) && $parts[1] !== '' ? (int) $parts[1] : null;
 
-            $insertData[] = [
-                'user_id' => $this->user->id,
-                'bantuan_id' => (int) $bantuanId,
-                'bantuan_kelurahan_id' => $bantuanKelurahanId ? (int) $bantuanKelurahanId : null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+                $insertData[] = [
+                    'user_id' => $this->user->id,
+                    'bantuan_id' => $bantuanId,
+                    'bantuan_kelurahan_id' => $bantuanKelurahanId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            } else {
+                // Format unit: bantuan_id saja (integer)
+                $insertData[] = [
+                    'user_id' => $this->user->id,
+                    'bantuan_id' => (int) $value,
+                    'bantuan_kelurahan_id' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
         }
 
-        \App\Models\UserBantuan::insert($insertData);
+        UserBantuan::insert($insertData);
 
         session()->flash('message', 'Bantuan berhasil diperbarui.');
         $this->redirectRoute(session('active_role') . '.UserDatalist');
@@ -60,9 +75,30 @@ class Plot extends Component implements HasForms
         $this->userId = $request->query('UserId');
         $this->user = User::find($this->userId);
 
-        $this->data['bantuan'] = $this->user->bantuan->pluck('id')->toArray();
+        $role = $this->user->role ?? null;
+
+        if ($role === 'validator') {
+            // Untuk validator, load dengan format "bantuan_id|bantuan_kelurahan_id"
+            $existingData = UserBantuan::where('user_id', $this->user->id)
+                ->get()
+                ->map(function ($item) {
+                    if ($item->bantuan_kelurahan_id) {
+                        return $item->bantuan_id . '|' . $item->bantuan_kelurahan_id;
+                    }
+                    // Bantuan nasional (tanpa kelurahan)
+                    return (string) $item->bantuan_id;
+                })
+                ->toArray();
+        } else {
+            // Untuk unit, load bantuan_id saja
+            $existingData = UserBantuan::where('user_id', $this->user->id)
+                ->pluck('bantuan_id')
+                ->toArray();
+        }
+
+        $this->data['bantuan'] = $existingData;
         $this->form->fill([
-            'bantuan' => $this->data['bantuan'],
+            'bantuan' => $existingData,
         ]);
     }
 
@@ -78,29 +114,30 @@ class Plot extends Component implements HasForms
             /**
              * Logika:
              * 1. Ambil semua bantuan yang punya relasi ke kelurahan di tabel bantuan_kelurahan
-             * 2. Tambahkan juga semua bantuan yang wilayah = NULL (berlaku nasional) untuk SEMUA kelurahan
+             * 2. Tambahkan juga semua bantuan yang wilayah = NULL (berlaku nasional)
+             * 
+             * Format key: bantuan_id|bantuan_kelurahan_id (menggunakan id dari tabel bantuan_kelurahan)
              */
 
-            // A. Ambil semua bantuan dengan kelurahannya (melalui pivot)
             // ============================================
             // A. Bantuan dengan wilayah tertentu
-            // (Join ke kelurahan karena punya target wilayah spesifik)
+            // Menggunakan bantuan_kelurahan.id sebagai key
             // ============================================
             $queryA = DB::table('bantuan as b')
                 ->join('bantuan_kelurahan as bk', 'bk.bantuan_id', '=', 'b.id')
                 ->join('kelurahans as k', 'k.id', '=', 'bk.kelurahan_id')
                 ->join('wilayah_kec as wk', 'wk.id_wil', '=', 'k.id_kec')
                 ->whereNotNull('b.wilayah')
-                ->selectRaw("CONCAT(b.id,'|',k.id) as opt_key")
+                ->selectRaw("CONCAT(b.id,'|',bk.id) as opt_key")
                 ->selectRaw("CONCAT(b.judul,' - ',wk.nm_wil,' - ',k.kemendagri_kelurahan_nama) as opt_label");
 
             // ============================================
             // B. Bantuan nasional (wilayah NULL)
-            // (Tanpa join kelurahan, tampil satu baris per bantuan)
+            // Tanpa kelurahan, key = bantuan_id saja
             // ============================================
             $queryB = DB::table('bantuan as b')
                 ->whereNull('b.wilayah')
-                ->selectRaw("b.id as opt_key")
+                ->selectRaw("CAST(b.id AS CHAR) as opt_key")
                 ->selectRaw("CONCAT(b.judul,' - Karawang') as opt_label");
 
             // ============================================
@@ -134,6 +171,7 @@ class Plot extends Component implements HasForms
                     ->label($label)
                     ->multiple()
                     ->options($options)
+                    ->searchable()
                     ->required(),
             ])
             ->statePath('data');

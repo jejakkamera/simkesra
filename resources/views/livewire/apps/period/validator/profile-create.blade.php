@@ -50,12 +50,14 @@
 
                             <div class="col-md-2 mb-3">
                                 <label>RT</label>
-                                <input type="text" class="form-control" wire:model="rt">
+                                <input type="text" class="form-control" wire:model="rt" maxlength="3" inputmode="numeric" placeholder="001">
+                                <small class="text-muted">3 digit</small>
                             </div>
 
                             <div class="col-md-2 mb-3">
                                 <label>RW</label>
-                                <input type="text" class="form-control" wire:model="rw">
+                                <input type="text" class="form-control" wire:model="rw" maxlength="3" inputmode="numeric" placeholder="001">
+                                <small class="text-muted">3 digit</small>
                             </div>
 
                             <div class="col-md-4 mb-3">

@@ -22,9 +22,9 @@ class Datalist extends PowerGridComponent
 {
     
     use WithExport;
-    public string $sortField = 'no_rekening';
+    public string $sortField = 'pemenangan.id';
     public string $tableName = 'penerimabantuan';
-    public string $sortDirection = 'desc';
+    public string $sortDirection = 'asc';
     public $Period;
 
     public function fields(): PowerGridFields
@@ -35,10 +35,14 @@ class Datalist extends PowerGridComponent
             ->add('uuid')
             ->add('nik')
             ->add('nama_lengkap')
+            ->add('status_ajuan_export', function ($row) use ($options) {
+                // Field untuk export - hanya teks biasa
+                $selected = $row->status_ajuan ?? 'Diajukan';
+                return $options[$selected] ?? $selected;
+            })
             ->add('status_ajuan', function ($row) use ($options) {
-                // Ambil nilai dari database
-                $selected = $row->status_ajuan ?? 'diajukan'; // default kalau null
-                // dd($selected);
+                // Field untuk tampilan - dengan dropdown
+                $selected = $row->status_ajuan ?? 'Diajukan';
                 return Blade::render(
                     '<x-select-status :options="$options" :rowId="$id" :selected="$selected" />',
                     [
@@ -74,36 +78,61 @@ class Datalist extends PowerGridComponent
     public function datasource(): Builder
     {
         
-        // return Pemenangan::with('profile', 'period', 'skema')->get();
-
+        // Optimized query - pilih kolom yang diperlukan saja
         $query = Pemenangan::query()
-        ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id') // Join dengan tabel departments
-            ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan') // Join dengan tabel departments       
-        ->join('periods', 'periods.id', '=', 'pemenangan.periode') // Join dengan tabel departments
-        ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan') // Join dengan tabel departments
-         ->select(
-             // Semua kolom dari tabel users
-            '*', // Semua kolom dari tabel students
-            DB::raw("CONCAT(\"'\", pemenangan.no_rekening) as no_rekening"),
-            DB::raw("CONCAT(\"'\", profiles.nik) as nik"),
-            'pemenangan.id as uuid',
-            'pemenangan.status as status_ajuan',
-        );
+            ->join('profiles', 'profiles.id', '=', 'pemenangan.profile_id')
+            ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan')
+            ->join('periods', 'periods.id', '=', 'pemenangan.periode')
+            ->join('bantuan', 'bantuan.id', '=', 'pemenangan.idbantuan')
+            ->select([
+                'pemenangan.id as uuid',
+                'pemenangan.status as status_ajuan',
+                'pemenangan.periode',
+                'pemenangan.no_rekening',
+                'pemenangan.jenis_rekening',
+                'pemenangan.tipe_rekening',
+                'pemenangan.verif_teller',
+                'pemenangan.id_verif_teller',
+                'pemenangan.tanggal_verif_teller',
+                DB::raw("CONCAT(\"'\", pemenangan.no_rekening) as no_rekening"),
+                DB::raw("CONCAT(\"'\", profiles.nik) as nik"),
+                'profiles.nama_lengkap',
+                'profiles.tempat_lahir',
+                'profiles.tanggal_lahir',
+                'profiles.rt',
+                'profiles.rw',
+                'profiles.alamat',
+                'profiles.desa',
+                'profiles.kode_pos',
+                'profiles.nama_ibu',
+                'profiles.tempat_mengajar',
+                'profiles.Alamat_mengajar',
+                'wilayah_kec.nm_wil',
+                'bantuan.judul',
+                'bantuan.nominal',
+                'bantuan.wilayah',
+                'periods.name_period',
+            ]);
 
-    if ($this->Period) {
-        $query->where('periode', $this->Period);
-    }
+        if ($this->Period) {
+            $query->where('pemenangan.periode', $this->Period);
+        }
 
-    if(session('active_role')=='unit'){
-        $filterIds = UserBantuan::query()
-            ->where('user_id', auth()->user()->id)
-            ->pluck('bantuan_id') // Ambil kolom yang dipakai buat filtering
-            ->toArray();
+        if(session('active_role')=='unit'){
+            $filterIds = UserBantuan::query()
+                ->where('user_id', auth()->user()->id)
+                ->pluck('bantuan_id')
+                ->toArray();
 
             $query->whereIn('bantuan.id', $filterIds);
-    }
+        }
 
-    return $query;
+        // Default sort: Kecamatan, Desa, Nama
+        $query->orderBy('wilayah_kec.nm_wil', 'asc')
+              ->orderBy('profiles.desa', 'asc')
+              ->orderBy('profiles.nama_lengkap', 'asc');
+
+        return $query;
 
     }
 
@@ -194,9 +223,13 @@ class Datalist extends PowerGridComponent
     public function columns(): array
     {
         return [
+            Column::make('Status Ajuan', 'status_ajuan_export')
+                ->visibleInExport(true)
+                ->hidden(),
             Column::make('Status Ajuan', 'status_ajuan')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->visibleInExport(false),
             Column::make('UUID', 'uuid')
                 ->searchable()
                 ->sortable(),

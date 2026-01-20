@@ -76,8 +76,8 @@ class ProfileCreate extends Component
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string|max:255',
-            'rt' => 'nullable|string|max:10',
-            'rw' => 'nullable|string|max:10',
+            'rt' => 'nullable|string|max:3',
+            'rw' => 'nullable|string|max:3',
             'kode_pos' => 'nullable|string|max:10',
             'tempat_mengajar' => 'nullable|string|max:255',
             'Alamat_mengajar' => 'nullable|string|max:255',
@@ -94,14 +94,18 @@ class ProfileCreate extends Component
         $pathKtp = $this->fotoktp ? $this->fotoktp->store('fotoktp', 'public') : null;
         $pathDiri = $this->fotodiri ? $this->fotodiri->store('fotodiri', 'public') : null;
 
+        // Format RT dan RW menjadi 3 digit (001, 002, dst)
+        $rtFormatted = $this->rt ? str_pad($this->rt, 3, '0', STR_PAD_LEFT) : null;
+        $rwFormatted = $this->rw ? str_pad($this->rw, 3, '0', STR_PAD_LEFT) : null;
+
         Profile::create([
             'id' => $uuid,
             'nik' => $this->nik,
             'nama_lengkap' => $this->nama_lengkap,
             'tempat_lahir' => $this->tempat_lahir,
             'tanggal_lahir' => $this->tanggal_lahir,
-            'rt' => $this->rt,
-            'rw' => $this->rw,
+            'rt' => $rtFormatted,
+            'rw' => $rwFormatted,
             'alamat' => $this->alamat,
             'desa' => $kelurahan ? $kelurahan->kemendagri_kelurahan_nama : null,
             'kode_kecamatan' => $this->id_kec,
