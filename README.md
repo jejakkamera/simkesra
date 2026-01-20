@@ -175,6 +175,7 @@ php artisan filament:assets
 APP_NAME="SIMKESRA"
 APP_ENV=local
 APP_DEBUG=true
+APP_TIMEZONE=UTC
 APP_URL=http://simkesra.local
 
 # Database
@@ -192,18 +193,28 @@ MAIL_PORT=2525
 MAIL_USERNAME=your_username
 MAIL_PASSWORD=your_password
 MAIL_FROM_ADDRESS=no-reply@simkesra.local
-MAIL_FROM_NAME="SIMKESRA"
+MAIL_FROM_NAME="${APP_NAME}"
 
 # Google reCAPTCHA
-RECAPTCHA_SITE_KEY=your_site_key
-RECAPTCHA_SECRET_KEY=your_secret_key
+GOOGLE_RECAPTCHA_KEY=your_site_key
+GOOGLE_RECAPTCHA_SECRET=your_secret_key
 
 # Midtrans (Payment Gateway)
-MIDTRANS_SERVER_KEY=your_server_key
 MIDTRANS_CLIENT_KEY=your_client_key
+MIDTRANS_SERVER_KEY=your_server_key
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_IS_SANITIZED=true
+MIDTRANS_IS_3DS=true
+
+# Queue
+QUEUE_CONNECTION=database
+
+# Content Security Policy - XSS Protection
+CSP_ENABLED=true
+CSP_NONCE_ENABLED=false
 
 # Filesystem
-FILESYSTEM_DISK=local
+FILESYSTEM_DISK=public
 ```
 
 ### Konfigurasi Content Security Policy
