@@ -19,7 +19,7 @@ class Datalist extends PowerGridComponent
     public string $sortField = 'nama_lengkap';
     public string $tableName = 'periodelist';
     public string $sortDirection = 'desc';
-
+    public string $primaryKey = 'profiles.id';
 
     public function datasource(): Builder
     {
@@ -27,7 +27,10 @@ class Datalist extends PowerGridComponent
         ->join('wilayah_kec', 'wilayah_kec.id_wil', '=', 'profiles.kode_kecamatan') // Join dengan tabel departments
         ->join('kelurahans', 'kelurahans.id_kelurahan', '=', 'profiles.id_kelurahan') // Join dengan tabel departments
         ->select(
-            '*','profiles.id as userid' // Semua kolom 
+            'profiles.*',
+            'profiles.id as id', 
+            'wilayah_kec.nm_wil',
+            'kelurahans.kemendagri_kelurahan_nama'
         );
         return $query;
     }
@@ -42,11 +45,24 @@ class Datalist extends PowerGridComponent
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-            ->add('name');
+            ->add('id')
+            ->add('nik')
+            ->add('nama_lengkap')
+            ->add('tempat_lahir')
+            ->add('tanggal_lahir')
+            ->add('nama_ibu')
+            ->add('alamat')
+            ->add('kemendagri_kelurahan_nama')
+            ->add('nm_wil')
+            ->add('kode_pos')
+            ->add('tempat_mengajar')
+            ->add('Alamat_mengajar');
     }
 
     public function setUp(): array
     {
+        $this->showCheckBox('id');
+
         return [
             Header::make()->showToggleColumns()->showSearchInput(), 
             Footer::make()
@@ -79,6 +95,12 @@ class Datalist extends PowerGridComponent
                 ->sortable(),
             Column::make('Tempat Lahir', 'tempat_lahir') // Using the custom accessor
                 ->searchable(),
+            Column::make('Tanggal Lahir', 'tanggal_lahir')
+                ->searchable()
+                ->sortable(),
+            Column::make('Nama Ibu Kandung', 'nama_ibu')
+                ->searchable()
+                ->sortable(),
             Column::make('Alamat', 'alamat') // Using the custom accessor
                 ->searchable(),
             Column::make('Desa', 'kemendagri_kelurahan_nama') // Using the custom accessor
@@ -103,7 +125,7 @@ class Datalist extends PowerGridComponent
             return [
                 Button::add('edit')
                     ->slot("<i class='fas fa-edit'></i>")
-                    ->route(session('active_role') . '.PenerimaEdit', ['UserId' => $row->userid])
+                    ->route(session('active_role') . '.PenerimaEdit', ['UserId' => $row->id])
                     ->class('btn btn-xs btn-outline-warning')->tooltip('Edit Record'),
             ];
        

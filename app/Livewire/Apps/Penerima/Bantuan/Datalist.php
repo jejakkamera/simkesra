@@ -109,7 +109,7 @@ class Datalist extends PowerGridComponent
 
     public function header(): array
     {
-        if(session('active_role')=='admin'){
+        if(session('active_role')=='admin' || session('active_role')=='kesra'){
             return [
                 Button::add('upload-pemenang')
                     ->slot("<i class='fas fa-upload'></i>")
@@ -277,15 +277,30 @@ class Datalist extends PowerGridComponent
 
     public function actions(Pemenangan $row): array
     {
-         if (strtolower($row->status_ajuan) !== 'disetujui') {
+        // Jika status BUKAN disetujui, tampilkan hanya profile dan delete
+        if (strtolower($row->status_ajuan) !== 'disetujui') {
+            if(session('active_role')=='admin' || session('active_role')=='kesra'){
+                return [
+                    Button::add('profile')
+                        ->slot("<i class='fas fa-user'></i>")
+                        ->route(session('active_role') . '.PemenanganBukti', ['idUser' => $row->uuid, 'periode' => $row->periode])
+                        ->class('btn btn-xs btn-outline-secondary')->tooltip('View Profile'),
+                    Button::add('delete')->confirm('Are you sure you want to Delete?')
+                        ->slot("<i class='fas fa-trash'></i>")
+                        ->class('btn btn-xs btn-outline-danger')
+                        ->dispatch('delete', ['id' => $row->uuid]),
+                ];
+            }
             return [];
         }
-        if(session('active_role')=='admin'){
+
+        // Jika status DISETUJUI, tampilkan semua tombol
+        if(session('active_role')=='admin' || session('active_role')=='kesra'){
             return [
                 Button::add('profile')
                     ->slot("<i class='fas fa-user'></i>")
-                    // ->route(session('active_role') . '.UserEdit', ['UserId' => $row->id])
-                    ->class('btn btn-xs btn-outline-secondary')->tooltip('Edit Record'),
+                    ->route(session('active_role') . '.PemenanganBukti', ['idUser' => $row->uuid, 'periode' => $row->periode])
+                    ->class('btn btn-xs btn-outline-secondary')->tooltip('View Profile'),
                 Button::add('flaging')
                     ->slot("<i class='fas fa-handshake'></i> ")
                     ->route(session('active_role') . '.PeriodFlagging', ['id_pendaftar' => $row->uuid, 'id_periode' => $row->periode])
@@ -327,8 +342,7 @@ class Datalist extends PowerGridComponent
                 Button::add('profile')
                     ->slot("<i class='fas fa-edit'></i>")
                     // ->route(session('active_role') . '.UserEdit', ['UserId' => $row->id])
-                    ->class('btn btn-xs
-                    btn-outline-secondary')->tooltip('Edit Record'),
+                    ->class('btn btn-xs btn-outline-secondary')->tooltip('Edit Record'),
                 Button::add('barcode')
                     ->slot("<i class='fas fa-qrcode'></i> ")
                     ->route(session('active_role') . '.PenerimaBantuanKartu', ['UserId' => $row->uuid])
@@ -350,7 +364,9 @@ class Datalist extends PowerGridComponent
                     ->class('btn btn-xs btn-outline-info')->tooltip('Print Barcode')
             ];
         }
-        
+
+        // Default: return empty array for other roles
+        return [];
     }
 
     #[On('delete')]
@@ -358,7 +374,7 @@ class Datalist extends PowerGridComponent
     {
         Pemenangan::find($id)->delete();
         session()->flash('message', 'User Delete successfully');
-        $this->redirectRoute(session('active_role') . '.PenerimaBantuanDatalist');
+        $this->redirectRoute(session('active_role') . '.PenerimaBantuanDatalist', ['periode' => $this->Period]);
     }
 
     #[On('unflag')]

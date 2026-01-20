@@ -40,7 +40,7 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     {
         // DB::beginTransaction();
         
-        // try {
+        try {
             if (!empty($row['nik']) && !is_null($row['nama_lengkap']) && !is_null($row['nama_ibu_kandung']) &&  !is_null($row['kecamatan'])) {
                
                 
@@ -89,10 +89,15 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                             'idbantuan' => $this->skema,
                             'periode' => $this->periode,
                             'no_rekening' => $row['no_rekening'],
+                            'status' => 'disetujui',
                             // 'jenis_rekening' => $row['jenis_rekening'],
                             // 'tipe_rekening' => $row['tipe_rekening'],
                         ]);
                         $statuspemenangan='Add';
+                    } else {
+                        // Jika ada, update status ajuan menjadi disetujui
+                        $Pemenangan->update(['status' => 'disetujui']);
+                        $statuspemenangan='Update';
                     }
                     
                     
@@ -100,7 +105,10 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                     if($statuspemenangan=='Add'){
                         $status = 'success';
                         $note = 'User Register '.$status.' : ' . $row['nama_lengkap'] . ' : ' . $row['no_rekening'].'(Add Pemenangan Success)' ;
-                    }else{
+                    } elseif ($statuspemenangan=='Update') {
+                        $status = 'success';
+                        $note = 'User Register '.$status.' : ' . $row['nama_lengkap'] . ' : ' . $row['no_rekening'].'(Update Status Pemenangan Success)' ;
+                    } else {
                         $status = 'failed';
                         $note = 'User Register  '.$status.' : ' . $row['nama_lengkap'] .'(Pemenangan Exist : '.$Pemenangan->skema->judul.')' ;
                     }
@@ -120,45 +128,42 @@ class StudentsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                         'import_log_id' => $this->importLog,
                         // 'user_id' => null,
                         'status' => 'failed',
-                        'note' => 'Kecamatan Not Found: ' . json_encode($row),
+                        'note' => 'Kecamatan Not Found in DB: ' . $row['kecamatan'],
                     ]);
                     return null;
                 }
 
-                    
-                // } else {
-                //     ExcelImportLogDetail::create([
-                //         'import_log_id' => $this->importLog->id,
-                //         // 'user_id' => null,
-                //         'status' => 'failed',
-                //         'note' => 'Exist NIK: ' . json_encode($row),
-                //     ]);
-                //     return null;
-                // }
             } else {
+                // Determine missing fields
+                $missing = [];
+                if(empty($row['nik'])) $missing[] = 'nik';
+                if(is_null($row['nama_lengkap'])) $missing[] = 'nama_lengkap';
+                if(is_null($row['nama_ibu_kandung'])) $missing[] = 'nama_ibu_kandung';
+                if(is_null($row['kecamatan'])) $missing[] = 'kecamatan';
+
                 // DB::rollBack();
                 // Buat log dengan status failed jika data tidak lengkap
                 ExcelImportLogDetail::create([
                     'import_log_id' => $this->importLog,
                     // 'user_id' => null,
                     'status' => 'failed',
-                    'note' => 'Incomplete data primary: ' . json_encode($row),
+                    'note' => 'Incomplete data. Missing fields: ' . implode(', ', $missing) . '. Data: ' . json_encode($row),
                 ]);
 
                 return null;
             }
-        // } catch (\Exception $e) {
-        //     // Rollback transaction jika ada kesalahan
-        //     DB::rollBack();
+        } catch (\Exception $e) {
+            // Rollback transaction jika ada kesalahan
+            DB::rollBack();
 
-        //     // Buat log dengan status failed dan catat error
-        //     ExcelImportLogDetail::create([
-        //         'import_log_id' => $this->importLog,
-        //         // 'user_id' => null,
-        //         'status' => 'failed',
-        //         'note' => 'Error: ' . $e->getMessage(),
-        //     ]);
-        // }
+            // Buat log dengan status failed dan catat error
+            ExcelImportLogDetail::create([
+                'import_log_id' => $this->importLog,
+                // 'user_id' => null,
+                'status' => 'failed',
+                'note' => 'Error processing row: ' . $e->getMessage() . '. Data: ' . json_encode($row),
+            ]);
+        }
 
         return null;
     }

@@ -6,10 +6,19 @@
             <button wire:click="SiswaList" class="btn btn-secondary" title="DataList Siswa">
                 <i class="ti ti-list me-0 me-sm-1"></i> 
             </button>
-            <br>
-            * Format yang digunakan sama data BJB
-            <br>
-            * Pastikan Nama, NIK dan ibu kandung tidak kosong dan data yang diupload sesuai.
+            <button wire:click="downloadTemplate" class="btn btn-success" title="Download Template Excel">
+                <i class="ti ti-download me-0 me-sm-1"></i> Download Template
+            </button>
+            <br><br>
+            <div class="alert alert-info">
+                <strong>Petunjuk Upload:</strong>
+                <ul class="mb-0">
+                    <li>Format yang digunakan sama data BJB</li>
+                    <li>Pastikan NIK, Nama Lengkap, Nama Ibu Kandung, dan Kecamatan <strong>tidak kosong</strong></li>
+                    <li>Format tanggal lahir: <strong>DD/MM/YYYY</strong> (contoh: 15/08/1985)</li>
+                    <li>Klik tombol <strong>"Download Template"</strong> untuk mendapatkan format Excel yang benar</li>
+                </ul>
+            </div>
         </div>
         <div class="card-body">
     
@@ -95,7 +104,7 @@
                                 @endif
                             </td>
 
-                            <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
+                            <td>{{ $log->created_at->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

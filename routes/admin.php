@@ -99,6 +99,8 @@ Route::middleware(['auth', 'checkActiveRole:admin'])->group(function () {
     Route::get('/apps/penerima/bantuan/kartuall', [PenerimaBantuanKartuall::class, 'index'])->name('admin.PenerimaBantuanKartuall');
     Route::post('/apps/penerima/bantuan/kartukec', [PenerimaBantuanKartuall::class, 'indexkec'])->name('admin.PenerimaBantuanKartukec');
     Route::post('/apps/penerima/bantuan/tandaterima', [PenerimaBantuanKartuall::class, 'tandaterima'])->name('admin.TandaTerima');
+    Route::get('/apps/period/validator/bukti', \App\Livewire\Apps\Period\Validator\PemenanganBukti::class)->name('admin.PemenanganBukti');
+    Route::get('/apps/period/validator/Pemenangan', PenerimaBantuanDatalist::class)->name('admin.PemenanganDatalist');
 
     
 });

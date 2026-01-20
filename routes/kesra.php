@@ -87,4 +87,7 @@ Route::middleware(['auth', 'checkActiveRole:kesra'])->group(function () {
 
     Route::get('/apps/penerima/bantuan/kartu/{UserId}', [PenerimaBantuanKartu::class, 'index'])->name('kesra.PenerimaBantuanKartu');
     Route::post('/apps/penerima/bantuan/tandaterima', [PenerimaBantuanKartuall::class, 'tandaterima'])->name('kesra.TandaTerima');
+    Route::get('/apps/penerima/bantuan/kartu-all', [PenerimaBantuanKartuall::class, 'index'])->name('kesra.PenerimaBantuanKartuall');
+    Route::get('/apps/period/validator/bukti', \App\Livewire\Apps\Period\Validator\PemenanganBukti::class)->name('kesra.PemenanganBukti');
+    Route::get('/apps/period/validator/Pemenangan', PenerimaBantuanDatalist::class)->name('kesra.PemenanganDatalist');
 });

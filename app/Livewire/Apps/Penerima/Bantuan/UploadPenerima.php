@@ -11,6 +11,7 @@ use App\Models\Period;
 use App\Models\Skema;
 use Livewire\Attributes\On;
 use App\Imports\StudentsImport;
+use App\Exports\TemplatePenerimaExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UploadPenerima extends Component
@@ -85,6 +86,11 @@ class UploadPenerima extends Component
 
         // Kirim pesan sukses ke sesi
         session()->flash('success', 'File is being processed in the background.');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplatePenerimaExport, 'template_penerima_bantuan.xlsx');
     }
 
 }
